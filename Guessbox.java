@@ -22,7 +22,7 @@ public class Guessbox extends Rectangle {
     }
 
 
-    public Guessbox(boolean light, int x, int y){
+    public Guessbox(Color color, int x, int y){
         //Sets the width and height of a tile
         setWidth(Main.TILE_SIZE);
         setHeight(Main.TILE_SIZE);
@@ -32,7 +32,7 @@ public class Guessbox extends Rectangle {
 
         //Fill - sets the color (has option to make checkered to change in the future
         //Stroke - deals with the border
-        setFill(light ? Color.LIGHTGRAY : Color.LIGHTGRAY);
+        setFill(color);
         setStrokeType(StrokeType.INSIDE);
         setStroke(Color.BLACK);
     }
