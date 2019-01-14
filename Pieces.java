@@ -2,21 +2,32 @@ package gamePackage;
 
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Ellipse;
 
 import javafx.scene.paint.Color;
 
 public class Pieces extends StackPane {
 
+    private double oldX, oldY;
+    private double mouseX, mouseY;
     private Color color;
 
     public Color getColor(){
         return color;
     }
-    public Pieces(Color color, int x, int y){
+
+    public double getOldX() {
+        return oldX;
+    }
+
+    public double getOldY() {
+        return oldY;
+    }
+
+    public Pieces(Color color, int x, int y, boolean moveable){
         this.color = color;
 
-        relocate(x * Main.TILE_SIZE, y * Main.TILE_SIZE);
+        move(x,y);
+        //relocate(x * Main.TILE_SIZE, y * Main.TILE_SIZE);
         Circle crc = new Circle(Main.TILE_SIZE * .45);
         crc.setFill(color);
 
@@ -26,6 +37,25 @@ public class Pieces extends StackPane {
 
         getChildren().add(crc);
 
+        if(moveable) {
+            setOnMousePressed(e -> {
+                mouseX = e.getSceneX();
+                mouseY = e.getSceneY();
+            });
+
+            setOnMouseDragged(e -> {
+                //relocate(e.getSceneX() - mouseX + (x * Main.TILE_SIZE), e.getSceneY() - mouseY + (y * Main.TILE_SIZE));
+                relocate(e.getSceneX() - mouseX + oldX, e.getSceneY() - mouseY + oldY);
+
+            });
+        }
+    }
+
+
+    public void move(int x, int y){
+        oldX = x * Main.TILE_SIZE;
+        oldY = y * Main.TILE_SIZE;
+        relocate(oldX, oldY);
     }
 
 }
