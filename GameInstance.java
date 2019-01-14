@@ -6,6 +6,7 @@ public class GameInstance {
     private boolean ongoing;
     private int turnCount = 0;
     private Move answer;
+    private String guessArray[][] = new String[12][4];
 
     public GameInstance(){
         this.ongoing = true;
@@ -63,6 +64,11 @@ public class GameInstance {
                     break;
                 }
             }
+
+            guessArray[turnCount][0] = move.orderArray[0];
+            guessArray[turnCount][1] = move.orderArray[1];
+            guessArray[turnCount][2] = move.orderArray[2];
+            guessArray[turnCount][3] = move.orderArray[3];
 
             turnCount ++;
 
