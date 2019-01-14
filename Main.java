@@ -1,4 +1,5 @@
 package gamePackage;
+import gameLogic.*;
 
 import javafx.application.Application;
 import javafx.scene.Group;
@@ -18,8 +19,8 @@ import javafx.scene.control.Button;
 
 public class Main extends Application {
 
-    public static final int TILE_SIZE = 100;
-    public static final int HEIGHT = 8;
+    public static final int TILE_SIZE = 60;
+    public static final int HEIGHT = 13;
     public static final int WIDTH = 4;
 
     private Group guessGroup = new Group();
@@ -45,13 +46,13 @@ public class Main extends Application {
         //Start button code
         Button start = new Button("Start");
         start.setOnAction(e -> window.setScene(gameScreen));
-        start.relocate(350, 300);
+        start.relocate(200,300);
         start.setPrefSize(100,50);
 
         //Title code
         Text gameTitle = new Text(200,100,"MasterMind");
         gameTitle.setFont(Font.font("Verdana", FontWeight.BOLD, 50));
-        gameTitle.relocate(250, 50);
+        gameTitle.relocate(100, 50);
 
         //makes the background the image in the specified path
         Image background = new Image("File:images/Wood-Background.jpg");
@@ -65,7 +66,7 @@ public class Main extends Application {
         menu.getChildren().addAll(iv,start, gameTitle);
 
         window.setResizable(false);
-        window.setScene(gameScreen);
+        window.setScene(titleScreen);
         window.show();
 
 
@@ -150,6 +151,7 @@ public class Main extends Application {
 
             if(!(newX > 3 || newY == 0)){
                 piece.move(newX, newY);
+
             }
             else{
                 piece.move(x0, y0);
