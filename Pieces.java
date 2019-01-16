@@ -41,6 +41,7 @@ public class Pieces extends StackPane {
             setOnMousePressed(e -> {
                 mouseX = e.getSceneX();
                 mouseY = e.getSceneY();
+
             });
 
             setOnMouseDragged(e -> {

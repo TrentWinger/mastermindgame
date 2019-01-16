@@ -25,6 +25,7 @@ public class Main extends Application {
 
     private Group guessGroup = new Group();
     private Group pieceGroup = new Group();
+    private Group pegGroup = new Group();
 
     private Guessbox[][] board = new Guessbox[WIDTH][HEIGHT];
 
@@ -33,7 +34,7 @@ public class Main extends Application {
 
 
     public void start(Stage primaryStage) throws Exception{
-        //sets primary state = to window just for readability
+        //sets primary stage = to window just for readability
         window = primaryStage;
 
         window.setTitle("MasterMind");
@@ -82,12 +83,21 @@ public class Main extends Application {
         iv.setFitHeight(HEIGHT * TILE_SIZE);
         iv.setFitWidth(WIDTH * TILE_SIZE * 2);
 
+        Button guessButton = new Button("Guess");
+        guessButton.relocate(7*TILE_SIZE,12*TILE_SIZE);
+        guessButton.setOnMouseClicked(e-> {
+            GameInstance.turnCount--;
+            Pegs peg = new Pegs(Color.WHITE, Color.WHITE, Color.BLACK, Color.GRAY, WIDTH, GameInstance.turnCount);
+            pegGroup.getChildren().addAll(peg);
+        });
+
+
         //Makes the window 2 times longer than the area of the guessing for room for pegs and other colors to pick from.
         //May need to make it wider or smaller depending on the items in game
         root.setPrefSize((WIDTH * TILE_SIZE) * 2, (HEIGHT * TILE_SIZE));
 
         //root.setStyle("-fx-background-color: #8B4513;");
-        root.getChildren().addAll(iv,guessGroup,pieceGroup);
+        root.getChildren().addAll(iv,guessGroup,pieceGroup,pegGroup,guessButton);
 
         //Creates the Guessing locations on to the board
         for(int x = 0; x < WIDTH; x++){
@@ -104,6 +114,7 @@ public class Main extends Application {
             }
         }
 
+
         //Create the color blocks
         Pieces redPiece = makePiece(Color.RED, 6, 5, true);
         Pieces greenPiece = makePiece(Color.GREEN, 6, 6,true);
@@ -119,7 +130,10 @@ public class Main extends Application {
         Pieces keyPiece3 = new Pieces(Color.GRAY, 2, 0,false);
         Pieces keyPiece4 = new Pieces(Color.GRAY, 3, 0,false);
 
-
+        for(int y = 1; y < HEIGHT; y++) {
+            Pegs peg1 = new Pegs(Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, WIDTH, y);
+            pegGroup.getChildren().addAll(peg1);
+        }
         pieceGroup.getChildren().addAll(redPiece, greenPiece, bluePiece, orangePiece, blackPiece, yellowPiece, keyPiece1, keyPiece2, keyPiece3, keyPiece4);
 
 
