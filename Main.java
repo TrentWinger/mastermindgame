@@ -52,8 +52,9 @@ public class Main extends Application {
 
         //Title code
         Text gameTitle = new Text(200,100,"MasterMind");
+        gameTitle.setFill(Color.WHITE);
         gameTitle.setFont(Font.font("Verdana", FontWeight.BOLD, 50));
-        gameTitle.relocate(100, 50);
+        gameTitle.relocate(75, 50);
 
         //makes the background the image in the specified path
         Image background = new Image("File:images/Wood-Background.jpg");
@@ -83,6 +84,7 @@ public class Main extends Application {
         iv.setFitHeight(HEIGHT * TILE_SIZE);
         iv.setFitWidth(WIDTH * TILE_SIZE * 2);
 
+        //Guess button
         Button guessButton = new Button("Guess");
         guessButton.relocate(7*TILE_SIZE,12*TILE_SIZE);
         guessButton.setOnMouseClicked(e-> {
@@ -97,7 +99,7 @@ public class Main extends Application {
         root.setPrefSize((WIDTH * TILE_SIZE) * 2, (HEIGHT * TILE_SIZE));
 
         //root.setStyle("-fx-background-color: #8B4513;");
-        root.getChildren().addAll(iv,guessGroup,pieceGroup,pegGroup,guessButton);
+        root.getChildren().addAll(iv,guessGroup,pegGroup,pieceGroup,guessButton);
 
         //Creates the Guessing locations on to the board
         for(int x = 0; x < WIDTH; x++){
@@ -131,8 +133,8 @@ public class Main extends Application {
         Pieces keyPiece4 = new Pieces(Color.GRAY, 3, 0,false);
 
         for(int y = 1; y < HEIGHT; y++) {
-            Pegs peg1 = new Pegs(Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, WIDTH, y);
-            pegGroup.getChildren().addAll(peg1);
+            Pegs defaultPegs = new Pegs(Color.TRANSPARENT,Color.TRANSPARENT, Color.TRANSPARENT, Color.TRANSPARENT, WIDTH, y);
+            pegGroup.getChildren().add(defaultPegs);
         }
         pieceGroup.getChildren().addAll(redPiece, greenPiece, bluePiece, orangePiece, blackPiece, yellowPiece, keyPiece1, keyPiece2, keyPiece3, keyPiece4);
 
@@ -147,7 +149,7 @@ public class Main extends Application {
         return (int)(pixel + TILE_SIZE / 2) / TILE_SIZE;
     }
 
-    private Pieces makePiece(Color color, int x, int y,boolean moveable){
+    public Pieces makePiece(Color color, int x, int y,boolean moveable){
         Pieces piece = new Pieces(color, x, y,moveable);
 
 
@@ -165,6 +167,8 @@ public class Main extends Application {
 
             if(!(newX > 3 || newY == 0)){
                 piece.move(newX, newY);
+                Pieces newPiece = makePiece(color,x0,y0,moveable);
+                pieceGroup.getChildren().addAll(newPiece);
 
             }
             else{
