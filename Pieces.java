@@ -23,6 +23,27 @@ public class Pieces extends StackPane {
         return oldY;
     }
 
+    public String hexToString(){
+        String color = "";
+        String temp = getColor().toString();
+
+        //change to switch statement later
+        if(temp.equals("0x008000ff"))
+            color = "green";
+        else if(temp.equals("0xff0000ff"))
+            color = "red";
+        else if(temp.equals("0x0000ffff"))
+            color = "blue";
+        else if(temp.equals("0xffff00ff"))
+            color = "yellow";
+        else if(temp.equals("0xffa500ff"))
+            color = "orange";
+        else if(temp.equals("0x000000ff"))
+            color = "black";
+
+        return color;
+    }
+
     public Pieces(Color color, int x, int y, boolean moveable){
         this.color = color;
 
@@ -45,10 +66,10 @@ public class Pieces extends StackPane {
             });
 
             setOnMouseDragged(e -> {
-                //relocate(e.getSceneX() - mouseX + (x * Main.TILE_SIZE), e.getSceneY() - mouseY + (y * Main.TILE_SIZE));
                 relocate(e.getSceneX() - mouseX + oldX, e.getSceneY() - mouseY + oldY);
 
             });
+
         }
     }
 

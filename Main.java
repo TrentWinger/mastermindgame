@@ -27,7 +27,9 @@ public class Main extends Application {
     private Group pieceGroup = new Group();
     private Group pegGroup = new Group();
 
-    private Guessbox[][] board = new Guessbox[WIDTH][HEIGHT];
+    private String[][] board = new String[WIDTH][HEIGHT];
+
+    public GameInstance game = new GameInstance();
 
     Stage window;
     Scene titleScreen, gameScreen;
@@ -164,11 +166,17 @@ public class Main extends Application {
             //this is for testing purposes when we implement the logic
             System.out.println("Old X : " + x0 + " Old Y : " + y0);
             System.out.println("New X : " + newX + " New Y : " + newY);
+            //System.out.println("Array: " + board[newX][newY]);
 
             if(!(newX > 3 || newY == 0)){
+                //this commented function will get the 8 digit text that you can convert in the Pieces class
+                //piece.getColor().toString();
                 piece.move(newX, newY);
                 Pieces newPiece = makePiece(color,x0,y0,moveable);
                 pieceGroup.getChildren().addAll(newPiece);
+
+                board[newX][newY] = piece.hexToString();
+                System.out.println(board[newX][newY]);
 
             }
             else{
