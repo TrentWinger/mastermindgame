@@ -8,6 +8,8 @@ import javafx.scene.shape.Rectangle;
 
 public class Pegs extends StackPane {
 
+
+
     public Pegs(Color TLcolor, Color TRcolor, Color BLcolor, Color BRcolor, int x, int y){
         //Rectangle box = new Rectangle(Main.TILE_SIZE * .25, Main.TILE_SIZE * .25);
         Circle topLeftCircle = new Circle(Main.TILE_SIZE * .15);
@@ -21,6 +23,11 @@ public class Pegs extends StackPane {
         topRightCircle.setFill(TRcolor);
         bottomLeftCircle.setFill(BLcolor);
         bottomRightCircle.setFill(BRcolor);
+
+        topLeftCircle.setStroke(Color.BLACK);
+        topRightCircle.setStroke(Color.BLACK);
+        bottomLeftCircle.setStroke(Color.BLACK);
+        bottomRightCircle.setStroke(Color.BLACK);
 
         topRightCircle.setTranslateX((Main.TILE_SIZE - Main.TILE_SIZE * .15 * 2) /2 );
 
