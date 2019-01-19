@@ -1,8 +1,6 @@
 package gameLogic;
 
-import javafx.scene.paint.Color;
 
-import java.util.Arrays;
 import java.util.Random;
 
 public class GameInstance {
@@ -18,7 +16,6 @@ public class GameInstance {
         this.answer = new Move(randomColor(),randomColor(),randomColor(),randomColor()); //Make a list of available colors
         blackpegs = 0;
         whitepegs = 0;
-        System.out.println("Answer: " + this.answer.orderArray[0] + this.answer.orderArray[1] + this.answer.orderArray[2] + this.answer.orderArray[3]);
 
     }
 
@@ -33,7 +30,7 @@ public class GameInstance {
         return temp;
     }
 
-    public String randomColor(){
+    private String randomColor(){
         String[] color = new String[6];
         color[0] = "green";
         color[1] = "orange";
@@ -49,86 +46,79 @@ public class GameInstance {
         return color[random];
     }
 
-    public String guess(String color1, String color2, String color3, String color4){
+    public void guess(String color1, String color2, String color3, String color4){
         if(ongoing){
 
 
             Move move = new Move(color1, color2, color3, color4);
 
+            String[] temp = {this.answer.orderArray[0], this.answer.orderArray[1], this.answer.orderArray[2], this.answer.orderArray[3]};
+            // add another temp array for the one we are comparing to to and then when one is black, make it equal to like "used"
+            String[] guessArr = {color1, color2, color3, color4};
+
             if(move.orderArray[0].equals(this.answer.orderArray[0])){
                 blackpegs++;
+                temp[0] = null;
+                guessArr[0] = "guessed";
             }
 
             if(move.orderArray[1].equals(this.answer.orderArray[1])){
                 blackpegs++;
+                temp[1] = null;
+                guessArr[1] = "guessed";
+
             }
 
             if(move.orderArray[2].equals(this.answer.orderArray[2])){
                 blackpegs++;
+                temp[2] = null;
+                guessArr[2] = "guessed";
+
             }
 
             if(move.orderArray[3].equals(this.answer.orderArray[3])){
                 blackpegs++;
+                temp[3] = null;
+                guessArr[3] = "guessed";
+
             }
 
             for(int i=0; i<this.answer.orderArray.length; i++){
-                if(move.orderArray[0].equals(this.answer.orderArray[i]) && i != 0){
+                if(guessArr[0].equals(temp[i]) && i != 0){
                     whitepegs++;
                     break;
                 }
             }
 
             for(int i=0; i<this.answer.orderArray.length; i++){
-                if(move.orderArray[1].equals(this.answer.orderArray[i]) && i != 1){
+                if(guessArr[1].equals(temp[i]) && i != 1){
                     whitepegs++;
                     break;
                 }
             }
 
             for(int i=0; i<this.answer.orderArray.length; i++){
-                if(move.orderArray[2].equals(this.answer.orderArray[i]) && i != 2){
+                if(guessArr[2].equals(temp[i]) && i != 2){
                     whitepegs++;
                     break;
                 }
             }
 
             for(int i=0; i<this.answer.orderArray.length; i++){
-                if(move.orderArray[3].equals(this.answer.orderArray[i]) && i != 3){
+                if(guessArr[3].equals(temp[i]) && i != 3){
                     whitepegs++;
                     break;
                 }
             }
 
-//            guessArray[turnCount][0] = move.orderArray[0];
-//            guessArray[turnCount][1] = move.orderArray[1];
-//            guessArray[turnCount][2] = move.orderArray[2];
-//            guessArray[turnCount][3] = move.orderArray[3];
 
 
 
-//            if(Arrays.equals(this.answer.orderArray, move.orderArray)){
-//                return("victory");
-//            }
-//            if{
-                if(turnCount == 1){
-                    this.ongoing = false;
-                    return("loss");
-                }
-//            }
-
-
-            return("whitepegs:"+whitepegs+
-                    "|blackpegs:"+blackpegs+
-                    "|hole1:"+move.orderArray[0]+
-                    "|hole2:"+move.orderArray[1]+
-                    "|hole3:"+move.orderArray[2]+
-                    "|hole4:"+move.orderArray[3]
-            );
         }
 
         else{
             System.out.print("The game has ended");
-            return(null);
+
         }
 
     }
