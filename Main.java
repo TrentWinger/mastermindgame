@@ -54,6 +54,7 @@ public class Main extends Application {
         gameScreen = new Scene((createContent()));
         titleScreen = new Scene(menu, TILE_SIZE * WIDTH * 2,TILE_SIZE * HEIGHT);
 
+
         //Start button code
         Button start = new Button("Start");
         start.setOnAction(e -> window.setScene(gameScreen));
@@ -74,8 +75,13 @@ public class Main extends Application {
         iv.setFitWidth(WIDTH * TILE_SIZE * 2);
 
 
+        Button options = new Button("Options");
+        options.relocate(200,400);
+        options.setPrefSize(100,50);
+
+
         //menu.setStyle("-fx-background-color: #8B4513;");
-        menu.getChildren().addAll(iv,start, gameTitle);
+        menu.getChildren().addAll(iv,start, gameTitle,options);
 
         window.setResizable(false);
         window.setScene(titleScreen);
@@ -93,6 +99,13 @@ public class Main extends Application {
         iv.setImage(background);
         iv.setFitHeight(HEIGHT * TILE_SIZE + TILE_SIZE);
         iv.setFitWidth(WIDTH * TILE_SIZE * 2);
+
+        //new game button
+        Button mainMenu = new Button("Menu");
+        mainMenu.relocate(7*TILE_SIZE, 0);
+        mainMenu.setOnAction(e->{
+            window.setScene(titleScreen);
+        });
 
         //Guess button
         Button guessButton = new Button("Guess");
@@ -117,8 +130,14 @@ public class Main extends Application {
                 }
 
                 turnCount--;
-                if(turnCount == 0)
+                if(turnCount == 0) {
                     System.out.println("you lose");
+                    Pieces answer1 = makePiece(stringToColor(game.getAnswer()[0]),0,0,false);
+                    Pieces answer2 = makePiece(stringToColor(game.getAnswer()[1]),1,0,false);
+                    Pieces answer3 = makePiece(stringToColor(game.getAnswer()[2]),2,0,false);
+                    Pieces answer4 = makePiece(stringToColor(game.getAnswer()[3]),3,0,false);
+                    pieceGroup.getChildren().addAll(answer1,answer2,answer3,answer4);
+                }
                 System.out.println("turns left: " + turnCount);
                 blackpegs = 0;
                 whitepegs = 0;
@@ -137,7 +156,7 @@ public class Main extends Application {
         root.setPrefSize((WIDTH * TILE_SIZE) * 2, (HEIGHT * TILE_SIZE) + TILE_SIZE);
 
         //root.setStyle("-fx-background-color: #8B4513;");
-        root.getChildren().addAll(iv,guessGroup,pegGroup,pieceGroup,guessButton);
+        root.getChildren().addAll(iv,guessGroup,pegGroup,pieceGroup,guessButton,mainMenu);
 
         //Creates the Guessing locations on to the board
         for(int x = 0; x < WIDTH; x++){
@@ -188,7 +207,7 @@ public class Main extends Application {
         return (int)(pixel + TILE_SIZE / 2) / TILE_SIZE;
     }
 
-    public Pieces makePiece(Color color, int x, int y,boolean moveable){
+    private Pieces makePiece(Color color, int x, int y,boolean moveable){
         Pieces piece = new Pieces(color, x, y,moveable);
 
 
@@ -201,11 +220,11 @@ public class Main extends Application {
             int y0 = toBoard(piece.getOldY());
 
             //this is for testing purposes when we implement the logic
-            System.out.println("Old X : " + x0 + " Old Y : " + y0);
-            System.out.println("New X : " + newX + " New Y : " + newY);
+            //System.out.println("Old X : " + x0 + " Old Y : " + y0);
+            //System.out.println("New X : " + newX + " New Y : " + newY);
             //System.out.println("Array: " + board[newX][newY]);
 
-            if(!(newX > 3 || newY == 0 || newY < turnCount)){
+            if(!(newX > 3 || newY == 0 || newY != turnCount)){
                 //this commented function will get the 8 digit text that you can convert in the Pieces class
                 //piece.getColor().toString();
                 piece.move(newX, newY);
@@ -216,7 +235,7 @@ public class Main extends Application {
 
 
                 arr[newX] = piece.hexToString();
-                System.out.println("Array X: " + arr[newX]);
+                //System.out.println("Array X: " + arr[newX]);
 
             }
             else{
@@ -241,7 +260,7 @@ public class Main extends Application {
 
         for(int i =0; i < blackpegs; i++)
             pegArr[i] = Color.BLACK;
-        for(int i = blackpegs; i < whitepegs; i++)
+        for(int i = blackpegs; i < whitepegs + blackpegs; i++)
             pegArr[i] = Color.WHITE;
         for(int i = blackpegs + whitepegs;i < pegArr.length; i++)
             pegArr[i] = Color.TRANSPARENT;
