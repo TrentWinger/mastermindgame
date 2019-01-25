@@ -32,6 +32,9 @@ public class Main extends Application {
     private Group guessGroup = new Group();
     private Group pieceGroup = new Group();
     private Group pegGroup = new Group();
+    private Group keyGroup = new Group();
+    private Group pegColors = new Group();
+
 
     String[] arr = new String[4];
     Color[] pegArr = new Color[4];
@@ -101,10 +104,15 @@ public class Main extends Application {
         iv.setFitWidth(WIDTH * TILE_SIZE * 2);
 
         //new game button
-        Button mainMenu = new Button("Menu");
-        mainMenu.relocate(7*TILE_SIZE, 0);
-        mainMenu.setOnAction(e->{
-            window.setScene(titleScreen);
+        Button newGame = new Button("New Game");
+        newGame.relocate(6*TILE_SIZE, 0);
+        newGame.setOnAction(e->{
+            pieceGroup.getChildren().clear();
+            pegColors.getChildren().clear();
+            for(int i = 0; i < arr.length; i++)
+                arr[i] = null;
+            game = new GameInstance();
+
         });
 
         //Guess button
@@ -118,7 +126,7 @@ public class Main extends Application {
                 game.guess(arr[0], arr[1], arr[2], arr[3]);
                 Pegs peg = getPegColors();
 
-                pegGroup.getChildren().addAll(peg);
+                pegColors.getChildren().addAll(peg);
                 if(blackpegs == 4) {
                     System.out.println("You win");
                     Pieces answer1 = makePiece(stringToColor(game.getAnswer()[0]),0,0,false);
@@ -156,7 +164,7 @@ public class Main extends Application {
         root.setPrefSize((WIDTH * TILE_SIZE) * 2, (HEIGHT * TILE_SIZE) + TILE_SIZE);
 
         //root.setStyle("-fx-background-color: #8B4513;");
-        root.getChildren().addAll(iv,guessGroup,pegGroup,pieceGroup,guessButton,mainMenu);
+        root.getChildren().addAll(iv,guessGroup,pegGroup,pieceGroup,keyGroup,pegColors,guessButton,newGame);
 
         //Creates the Guessing locations on to the board
         for(int x = 0; x < WIDTH; x++){
@@ -194,7 +202,7 @@ public class Main extends Application {
             Pegs defaultPegs = new Pegs(Color.TRANSPARENT,Color.TRANSPARENT, Color.TRANSPARENT, Color.TRANSPARENT, WIDTH, y);
             pegGroup.getChildren().add(defaultPegs);
         }
-        pieceGroup.getChildren().addAll(redPiece, greenPiece, bluePiece, orangePiece, blackPiece, yellowPiece, keyPiece1, keyPiece2, keyPiece3, keyPiece4);
+        keyGroup.getChildren().addAll(redPiece, greenPiece, bluePiece, orangePiece, blackPiece, yellowPiece, keyPiece1, keyPiece2, keyPiece3, keyPiece4);
 
 
 
@@ -220,17 +228,17 @@ public class Main extends Application {
             int y0 = toBoard(piece.getOldY());
 
             //this is for testing purposes when we implement the logic
-            //System.out.println("Old X : " + x0 + " Old Y : " + y0);
-            //System.out.println("New X : " + newX + " New Y : " + newY);
-            //System.out.println("Array: " + board[newX][newY]);
+            System.out.println("Old X : " + x0 + " Old Y : " + y0);
+            System.out.println("New X : " + newX + " New Y : " + newY);
+            System.out.println("Array: " + arr[newX]);
 
             if(!(newX > 3 || newY == 0 || newY != turnCount)){
                 //this commented function will get the 8 digit text that you can convert in the Pieces class
                 //piece.getColor().toString();
                 piece.move(newX, newY);
                 Pieces newPiece = makePiece(color,x0,y0,moveable);
-                pieceGroup.getChildren().addAll(newPiece);
-
+                keyGroup.getChildren().addAll(newPiece);
+                pieceGroup.getChildren().add(piece);
 
 
 
