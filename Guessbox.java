@@ -9,20 +9,20 @@ public class Guessbox extends Rectangle {
 
     Pieces piece;
 
-    public boolean hasPiece(){
+    public boolean hasPiece() {
         return piece != null;
     }
 
-    public Pieces getPiece(){
+    public Pieces getPiece() {
         return piece;
     }
 
-    public void setPiece(Pieces piece){
+    public void setPiece(Pieces piece) {
         this.piece = piece;
     }
 
 
-    public Guessbox(Color color, int x, int y){
+    public Guessbox(Color color, int x, int y) {
         //Sets the width and height of a tile
         setWidth(Main.TILE_SIZE);
         setHeight(Main.TILE_SIZE);

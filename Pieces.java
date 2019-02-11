@@ -11,7 +11,7 @@ public class Pieces extends StackPane {
     private double mouseX, mouseY;
     private Color color;
 
-    public Color getColor(){
+    public Color getColor() {
         return color;
     }
 
@@ -23,23 +23,39 @@ public class Pieces extends StackPane {
         return oldY;
     }
 
-    public String hexToString(){
+    /**
+     * @return returns a string that was converted from the Color.scene.paint.Color 'hex' value.
+     */
+    public String hexToString() {
         String color = "";
         String temp = getColor().toString();
 
-        //change to switch statement later
-        if(temp.equals("0x008000ff"))
-            color = "green";
-        else if(temp.equals("0xff0000ff"))
-            color = "red";
-        else if(temp.equals("0x0000ffff"))
-            color = "blue";
-        else if(temp.equals("0xffff00ff"))
-            color = "yellow";
-        else if(temp.equals("0xffa500ff"))
-            color = "orange";
-        else if(temp.equals("0x000000ff"))
-            color = "black";
+        switch (temp) {
+            case "0x008000ff":
+                color = "green";
+                break;
+            case "0xff0000ff":
+                color = "red";
+                break;
+            case "0x0000ffff":
+                color = "blue";
+                break;
+            case "0xffff00ff":
+                color = "yellow";
+                break;
+            case "0xffa500ff":
+                color = "orange";
+                break;
+            case "0x000000ff":
+                color = "black";
+                break;
+            case "0xffc0cbff":
+                color = "pink";
+                break;
+            case "0x800080ff":
+                color = "purple";
+                break;
+        }
 
         return color;
     }
@@ -47,18 +63,18 @@ public class Pieces extends StackPane {
     public Pieces(Color color, int x, int y, boolean moveable){
         this.color = color;
 
-        move(x,y);
+        move(x, y);
         //relocate(x * Main.TILE_SIZE, y * Main.TILE_SIZE);
         Circle crc = new Circle(Main.TILE_SIZE * .45);
         crc.setFill(color);
 
         //this formula centers the circle inside the tile
-        crc.setTranslateX((Main.TILE_SIZE - Main.TILE_SIZE * .45 * 2) /2 );
-        crc.setTranslateY((Main.TILE_SIZE - Main.TILE_SIZE * .45 * 2) /2 );
+        crc.setTranslateX((Main.TILE_SIZE - Main.TILE_SIZE * .45 * 2) /2);
+        crc.setTranslateY((Main.TILE_SIZE - Main.TILE_SIZE * .45 * 2) /2);
 
         getChildren().add(crc);
 
-        if(moveable) {
+        if (moveable) {
             setOnMousePressed(e -> {
                 mouseX = e.getSceneX();
                 mouseY = e.getSceneY();
@@ -74,7 +90,7 @@ public class Pieces extends StackPane {
     }
 
 
-    public void move(int x, int y){
+    public void move(int x, int y) {
         oldX = x * Main.TILE_SIZE;
         oldY = y * Main.TILE_SIZE;
         relocate(oldX, oldY);
