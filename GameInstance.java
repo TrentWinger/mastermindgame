@@ -72,61 +72,65 @@ public class GameInstance {
 
             Move move = new Move(color1, color2, color3, color4);
 
-            String[] temp = {this.answer.orderArray[0], this.answer.orderArray[1], this.answer.orderArray[2], this.answer.orderArray[3]};
+            String[] ans = {this.answer.orderArray[0], this.answer.orderArray[1], this.answer.orderArray[2], this.answer.orderArray[3]};
 
             String[] guessArr = {color1, color2, color3, color4};
 
             if (move.orderArray[0].equals(this.answer.orderArray[0])) {
                 blackpegs++;
-                temp[0] = null;
+                ans[0] = null;
                 guessArr[0] = "guessed";
             }
 
             if (move.orderArray[1].equals(this.answer.orderArray[1])) {
                 blackpegs++;
-                temp[1] = null;
+                ans[1] = null;
                 guessArr[1] = "guessed";
 
             }
 
             if (move.orderArray[2].equals(this.answer.orderArray[2])) {
                 blackpegs++;
-                temp[2] = null;
+                ans[2] = null;
                 guessArr[2] = "guessed";
 
             }
 
             if (move.orderArray[3].equals(this.answer.orderArray[3])) {
                 blackpegs++;
-                temp[3] = null;
+                ans[3] = null;
                 guessArr[3] = "guessed";
 
             }
 
-            for (int i=0; i<this.answer.orderArray.length; i++) {
-                if (guessArr[0].equals(temp[i]) && i != 0) {
+            for (int i = 0; i < this.answer.orderArray.length; i++) {
+                if (guessArr[0].equals(ans[i]) && i != 0) {
                     whitepegs++;
+                    ans[i] = null;
                     break;
                 }
             }
 
             for (int i = 0; i < this.answer.orderArray.length; i++) {
-                if (guessArr[1].equals(temp[i]) && i != 1) {
+                if (guessArr[1].equals(ans[i]) && i != 1) {
                     whitepegs++;
+                    ans[i] = null;
                     break;
                 }
             }
 
             for  (int i = 0; i < this.answer.orderArray.length; i++) {
-                if (guessArr[2].equals(temp[i]) && i != 2) {
+                if (guessArr[2].equals(ans[i]) && i != 2) {
                     whitepegs++;
+                    ans[i] = null;
                     break;
                 }
             }
 
             for (int i = 0; i < this.answer.orderArray.length; i++) {
-                if (guessArr[3].equals(temp[i]) && i != 3) {
+                if (guessArr[3].equals(ans[i]) && i != 3) {
                     whitepegs++;
+                    ans[i] = null;
                     break;
                 }
             }

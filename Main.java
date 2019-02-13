@@ -34,6 +34,7 @@ public class Main extends Application {
     public static int HEIGHT = 12;
     public static int WIDTH = 4;
     public static int diffColors = 6;
+    public static int numBox = 8;
 
 
     //these are all of the groups that different items get added to which get added to the root pane in createcontent()
@@ -46,8 +47,8 @@ public class Main extends Application {
 
     //arr is the array that is populated with colors once the 'guess' button is pressed. it is compared to the answer inside of Game Instance
     //pegArr is the array of peg colors
-    String[] arr = new String[4];
-    Color[] pegArr = new Color[4];
+    private String[] arr = new String[4];
+    private Color[] pegArr = new Color[4];
 
     //starts new game instance
     public GameInstance game;
@@ -55,9 +56,9 @@ public class Main extends Application {
     //window is the window that contains the scene and stage
     //Scene is which scene is showing (title screen, game screen etc...)
     Stage window;
-    Scene titleScreen, gameScreen, diffScreen;
 
-    boolean multiColors = true;
+    private Scene titleScreen, gameScreen, diffScreen, instructScreen;
+
 
 
     /**
@@ -100,12 +101,19 @@ public class Main extends Application {
 
         //checks to see which box is selected and update the variable diffColors to the value which is associated with a difficulty
         group.selectedToggleProperty().addListener((observableValue, toggle, t1) -> {
-            if (hard.isSelected())
+            if (hard.isSelected()) {
                 diffColors = 8;
-            if (medium.isSelected())
+                numBox = 9;
+            }
+            if (medium.isSelected()) {
                 diffColors = 6;
-            if (easy.isSelected())
+                numBox = 8;
+            }
+
+            if (easy.isSelected()) {
                 diffColors = 4;
+                numBox = 7;
+            }
 
         });
 
@@ -115,6 +123,53 @@ public class Main extends Application {
             gameScreen = new Scene((createContent()));
             window.setScene(gameScreen);
             game = new GameInstance();
+            keyGroup.getChildren().clear();
+            guessGroup.getChildren().clear();
+
+            if (diffColors >= 4) {
+                Pieces redPiece = makePiece(Color.RED,  6,  5,  true);
+                Pieces greenPiece = makePiece(Color.GREEN, 6,  6,  true);
+                Pieces orangePiece = makePiece(Color.ORANGE, 7,  5,  true);
+                Pieces blackPiece = makePiece(Color.BLACK, 7,  6,  true);
+
+                keyGroup.getChildren().addAll(redPiece, greenPiece, blackPiece, orangePiece);
+            }
+            if (diffColors >= 6) {
+                Pieces yellowPiece = makePiece(Color.YELLOW, 7, 7, true);
+                Pieces bluePiece = makePiece(Color.BLUE, 6, 7, true);
+
+                keyGroup.getChildren().addAll(bluePiece, yellowPiece);
+            }
+            if (diffColors == 8) {
+                Pieces purplePiece = makePiece(Color.PURPLE, 6, 8, true);
+                Pieces pinkPiece = makePiece(Color.PINK, 7, 8, true);
+                keyGroup.getChildren().addAll(purplePiece, pinkPiece);
+            }
+
+            //creates the box's for the keys based on the difficulty
+            for (int x = 6; x < 8; x++) {
+                for (int y = 5; y < numBox; y++) {
+                    Guessbox colorOptions = new Guessbox(Color.WHITE,x, y);
+                    guessGroup.getChildren().addAll(colorOptions);
+                }
+            }
+
+            //Creates the 4x12 Guessing locations on to the board
+            for (int x = 0; x < WIDTH; x++) {
+                for (int y = 1; y < HEIGHT + 1; y++) {
+                    Guessbox guess = new Guessbox(Color.LIGHTGRAY, x, y);
+                    guessGroup.getChildren().addAll(guess);
+                }
+            }
+
+            //Create the key pieces that are grayed out
+            Pieces keyPiece1 = makePiece(Color.GRAY, 0, 0, false);
+            Pieces keyPiece2 = makePiece(Color.GRAY, 1, 0, false);
+            Pieces keyPiece3 = makePiece(Color.GRAY, 2, 0, false);
+            Pieces keyPiece4 = makePiece(Color.GRAY, 3, 0, false);
+
+            keyGroup.getChildren().addAll(keyPiece1, keyPiece2, keyPiece3, keyPiece4);
+
         });
         go.relocate(200, 300);
         go.setPrefSize(100, 50);
@@ -149,6 +204,11 @@ public class Main extends Application {
         options.relocate(200, 400);
         options.setPrefSize(100, 50);
 
+        Button htp = new Button("How To Play");
+        htp.relocate(200, 500);
+        htp.setPrefSize(100,50);
+        htp.setOnAction(e -> window.setScene(instructScreen));
+
         //this is if we just want some regular background color instead of an image
         //menu.setStyle("-fx-background-color: #8B4513;");
 
@@ -157,9 +217,10 @@ public class Main extends Application {
 
         titleScreen = new Scene(menu,  TILE_SIZE * WIDTH * 2, TILE_SIZE * HEIGHT);
         diffScreen = new Scene(difficulty, TILE_SIZE * WIDTH * 2, TILE_SIZE * HEIGHT);
+        instructScreen = new Scene(createInstructions());
 
         //menu is the main menu panel, we add all the buttons and background to the panel
-        menu.getChildren().addAll(diffBg, start, gameTitle, options);
+        menu.getChildren().addAll(diffBg, start, gameTitle, options, htp);
         difficulty.getChildren().addAll(iv, go, easy, medium, hard);
 
         //makes the window not able to be resized, sets default scene to the title screen and then shows the window
@@ -169,6 +230,7 @@ public class Main extends Application {
 
 
     }
+
 
     /**
      * @return root which is a pane that the content will be displayed on.
@@ -185,7 +247,7 @@ public class Main extends Application {
 
         //new game button
         Button newGame = new Button("New Game");
-        newGame.relocate(6 * TILE_SIZE,  0);
+        newGame.relocate(6 * TILE_SIZE + (TILE_SIZE / 2),  0);
         newGame.setOnAction(e -> {
             pieceGroup.getChildren().clear();
             pegColors.getChildren().clear();
@@ -193,7 +255,12 @@ public class Main extends Application {
                 arr[i] = null;
             game = new GameInstance();
 
+
         });
+
+        Button menu = new Button("Menu");
+        menu.relocate(7 * TILE_SIZE, TILE_SIZE);
+        menu.setOnAction(e -> window.setScene(titleScreen));
 
         //image for the trash can below the colors
         Image trashCan = new Image("File:images/Trash-Can.jpg");
@@ -258,50 +325,7 @@ public class Main extends Application {
         root.setPrefSize((WIDTH * TILE_SIZE) * 2, (HEIGHT * TILE_SIZE) + TILE_SIZE);
 
         //here is where everything is added to the root which is indirectly added to the gameScreen scene
-        root.getChildren().addAll(iv, tc, guessGroup, pegGroup, keyGroup, pieceGroup, pegColors, guessButton, newGame);
 
-        //Creates the 4x12 Guessing locations on to the board
-        for (int x = 0; x < WIDTH; x++) {
-            for (int y = 1; y < HEIGHT + 1; y++) {
-               Guessbox guess = new Guessbox(Color.LIGHTGRAY, x, y);
-               guessGroup.getChildren().addAll(guess);
-            }
-        }
-        //creates the 2x4 group of box's for the colors to go just to the right of the board
-        for (int x = 6; x < 8; x++) {
-            for (int y = 5; y < 8 + 1; y++) {
-                Guessbox colorOptions = new Guessbox(Color.WHITE,x, y);
-                guessGroup.getChildren().addAll(colorOptions);
-            }
-        }
-
-
-        //Create the color blocks
-        if (diffColors >= 4) {
-            Pieces redPiece = makePiece(Color.RED,  6,  5,  true);
-            Pieces greenPiece = makePiece(Color.GREEN, 6,  6,  true);
-            Pieces orangePiece = makePiece(Color.ORANGE, 7,  5,  true);
-            Pieces blackPiece = makePiece(Color.BLACK, 7,  6,  true);
-
-            keyGroup.getChildren().addAll(redPiece, greenPiece, blackPiece, orangePiece);
-        }
-        if (diffColors >= 6) {
-            Pieces yellowPiece = makePiece(Color.YELLOW, 7, 7, true);
-            Pieces bluePiece = makePiece(Color.BLUE, 6, 7, true);
-
-            keyGroup.getChildren().addAll(bluePiece, yellowPiece);
-        }
-        if (diffColors == 8) {
-            Pieces purplePiece = makePiece(Color.PURPLE, 6, 8, true);
-            Pieces pinkPiece = makePiece(Color.PINK, 7, 8, true);
-            keyGroup.getChildren().addAll(purplePiece, pinkPiece);
-        }
-
-        //Create the key pieces that are grayed out
-        Pieces keyPiece1 = new Pieces(Color.GRAY, 0, 0, false);
-        Pieces keyPiece2 = new Pieces(Color.GRAY, 1, 0, false);
-        Pieces keyPiece3 = new Pieces(Color.GRAY, 2, 0, false);
-        Pieces keyPiece4 = new Pieces(Color.GRAY, 3, 0, false);
 
         //Creates the shell for the pegs that will soon be filled with colors
         for (int y = 1; y < HEIGHT + 1; y++) {
@@ -310,8 +334,9 @@ public class Main extends Application {
         }
 
         //we have a seperate group for the keys because when we start a new game we just need to clear the pieceGroup and leave the keys alone.
-        //this code adds all of the key pieces listed above to the keyGroup which is indirectly added to the gameScreen
-        keyGroup.getChildren().addAll(keyPiece1, keyPiece2, keyPiece3, keyPiece4);
+        //this code adds all of the key pieces listed above to the keyGroup which is indirectly added to the gameScreen.
+
+        root.getChildren().addAll(iv, tc, guessGroup, pegGroup, keyGroup, pieceGroup, pegColors, guessButton, newGame, menu);
 
 
         //returns the root pane which gets passed to the new Scene() in the start method
@@ -361,12 +386,20 @@ public class Main extends Application {
                 //Checks if you are trying to move a piece that you already placed on the board
                 //if not, move piece to newX and newY, make a new piece at the previous space which is where the key is
                 //update the array with the piece color and add the piece to the pieceGroup group
+                //else if checks if the piece if coming from a key spot and if so then override the first if statement
                 if (!(pieceGroup.getChildren().contains(piece))) {
                     piece.move(newX, newY);
                     Pieces newPiece = makePiece(color, x0, y0, moveable);
                     keyGroup.getChildren().addAll(newPiece);
                     arr[newX] = piece.hexToString();
                     pieceGroup.getChildren().add(piece);
+                } else if (keySpace(x0, y0)) {
+                    piece.move(newX, newY);
+                    Pieces newPiece = makePiece(color, x0, y0, moveable);
+                    arr[newX] = piece.hexToString();
+                    keyGroup.getChildren().addAll(newPiece);
+
+                    arr[newX] = piece.hexToString();
                 } else {
                     //move back to previous location
                     System.out.println("yank");
@@ -381,8 +414,9 @@ public class Main extends Application {
                 //checks if piece is dropped on the garbage can, if so it moves the piece to the spot where the key is for that color
 
                 System.out.println("trash");
+
                 switch (piece.hexToString()) {
-                    case "green": piece.move(6,6);
+                    case "green": piece.move(6, 6);
                         break;
                     case "red": piece.move(6, 5);
                         break;
@@ -400,10 +434,15 @@ public class Main extends Application {
                         break;
                 }
 
-                pieceGroup.getChildren().remove(piece);
 
 
-            } else {
+
+
+
+
+
+
+            }  else {
                 //move back to original location
                 piece.move(x0, y0);
                 System.out.println("Out of Bounds");
@@ -471,6 +510,88 @@ public class Main extends Application {
 
 
     }
+
+    /**
+     *
+     * @param x takes the x location of a piece.
+     * @param y takes the y location of a piece.
+     * @return returns a string based off of where the piece is located.
+     */
+    public String keyLocation(int x, int y) {
+
+        if (x == 6 && y == 6)
+            return "green";
+        else if (x == 6 && y == 5)
+            return "red";
+        else if (x == 6 && y == 7)
+            return "blue";
+        else if (x == 7 && y == 5)
+            return "orange";
+        else if (x == 7 && y == 7)
+            return "yellow";
+        else if (x == 7 && y == 6)
+            return "black";
+        else if (x == 6 && y == 8)
+            return "purple";
+        else if (x == 7 && y == 8)
+            return "pink";
+
+        return "";
+
+    }
+
+    /**
+     *
+     * @param x takes the x location of a piece.
+     * @param y takes the y location of a piece.
+     * @return returns true or false if the string from keyLocation matches a color.
+     */
+    public boolean keySpace(int x, int y) {
+        String temp = keyLocation(x, y);
+        boolean result = false;
+        switch (temp) {
+            case "green": result = true;
+                break;
+            case "red": result = true;
+                break;
+            case "blue": result = true;
+                break;
+            case "orange": result = true;
+                break;
+            case "yellow": result = true;
+                break;
+            case "black": result = true;
+                break;
+            case "purple": result = true;
+                break;
+            case "pink": result = true;
+                break;
+        }
+
+        return result;
+    }
+
+    private Parent createInstructions() {
+        Pane root = new Pane();
+
+        root.setPrefSize((WIDTH * TILE_SIZE) * 2, (HEIGHT * TILE_SIZE) + TILE_SIZE);
+        Text title = new Text("How to Play");
+        title.setFill(Color.BLACK);
+        title.setFont(Font.font("Verdana", FontWeight.BOLD, 50));
+        title.relocate(75,  50);
+
+        Text instructions = new Text("The code maker will use the white pegs, "
+                 + "which indicate each peg that is a correct color but wrong position, or a black peg to indicate each peg is in a correct position and a right color. "
+                 + " If neither are true, then no peg should be placed. The code maker may place these pegs in any order in the peg holes arranged in the square pattern next to the line of peg holes holding the guess pegs being answered."
+                 + "The answer and guess pegs stay in their positions until the end of the game."
+                 + "Play continues until the code is discovered or there are no remaining guesses.");
+        instructions.relocate(75, 150);
+        instructions.setWrappingWidth(TILE_SIZE * 6);
+
+        root.getChildren().addAll(title, instructions);
+        return root;
+    }
+
     public static void main(String[] args) {
 
         launch(args);
