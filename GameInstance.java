@@ -14,20 +14,40 @@ public class GameInstance {
     public static int blackpegs = 0;
     public static int whitepegs = 0;
 
+    String[] colorz = new String[Main.diffColors];
+
 
     public GameInstance() {
         this.ongoing = true;
+
+
+        if (Main.diffColors >= 4) {
+            colorz[0] = "green";
+            colorz[1] = "orange";
+            colorz[2] = "black";
+            colorz[3] = "red";
+        }
+        if (Main.diffColors >= 6) {
+            colorz[4] = "blue";
+            colorz[5] = "yellow";
+        }
+        if (Main.diffColors == 8) {
+            colorz[6] = "purple";
+            colorz[7] = "pink";
+
+        }
+
         this.answer = new Move(randomColor(), randomColor(), randomColor(), randomColor());
+
         turnCount = 12;
         blackpegs = 0;
         whitepegs = 0;
-        System.out.println(" "+this.answer.orderArray[0] + this.answer.orderArray[1] + this.answer.orderArray[2] + this.answer.orderArray[3]);
+        System.out.println(" " + this.answer.orderArray[0] + this.answer.orderArray[1] + this.answer.orderArray[2] + this.answer.orderArray[3]);
 
 
     }
 
     /**
-     *
      * @return returns an array of strings which is the answer for the game
      */
     public String[] getAnswer() {
@@ -40,30 +60,26 @@ public class GameInstance {
         return temp;
     }
 
+
     private String randomColor() {
 
-        String[] color = new String[Main.diffColors];
-
-        if (Main.diffColors >= 4) {
-            color[0] = "green";
-            color[1] = "orange";
-            color[2] = "black";
-            color[3] = "red";
-        }
-        if (Main.diffColors >= 6) {
-            color[4] = "blue";
-            color[5] = "yellow";
-        }
-        if (Main.diffColors == 8) {
-            color[6] = "purple";
-            color[7] = "pink";
-
-        }
+        String s;
 
         Random rand = new Random();
         int random = rand.nextInt(Main.diffColors);
 
-        return color[random];
+        s = colorz[random];
+
+
+        if (!Main.duplicateColors) {
+            colorz[random] = null;
+
+            if (s != null)
+                return s;
+            else
+                return randomColor();
+        } else
+            return s;
     }
 
     public void guess(String color1, String color2, String color3, String color4) {
@@ -119,7 +135,7 @@ public class GameInstance {
                 }
             }
 
-            for  (int i = 0; i < this.answer.orderArray.length; i++) {
+            for (int i = 0; i < this.answer.orderArray.length; i++) {
                 if (guessArr[2].equals(ans[i]) && i != 2) {
                     whitepegs++;
                     ans[i] = null;
@@ -134,8 +150,6 @@ public class GameInstance {
                     break;
                 }
             }
-
-
 
 
         } else {

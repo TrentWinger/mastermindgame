@@ -1,4 +1,5 @@
 package gamePackage;
+
 import gameLogic.GameInstance;
 
 import javafx.application.Application;
@@ -16,6 +17,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.scene.control.CheckBox;
 
 
 import static gameLogic.GameInstance.turnCount;
@@ -25,7 +27,7 @@ import static gameLogic.GameInstance.whitepegs;
 
 /**
  * Main method for GUI.
- * */
+ */
 
 public class Main extends Application {
 
@@ -36,6 +38,7 @@ public class Main extends Application {
     public static int diffColors = 6;
     public static int numBox = 8;
 
+    public static boolean duplicateColors = true;
 
     //these are all of the groups that different items get added to which get added to the root pane in createcontent()
     private Group guessGroup = new Group();
@@ -51,21 +54,19 @@ public class Main extends Application {
     private Color[] pegArr = new Color[4];
 
     //starts new game instance
-    public GameInstance game;
+    private GameInstance game;
 
     //window is the window that contains the scene and stage
     //Scene is which scene is showing (title screen, game screen etc...)
-    Stage window;
+    private Stage window;
 
     private Scene titleScreen, gameScreen, diffScreen, instructScreen;
 
 
-
     /**
      * @param primaryStage input for a stage which is the thing that will be displayed to the user.
-     * @throws Exception throws exception.
      */
-    public void start(final Stage primaryStage) throws Exception {
+    public void start(final Stage primaryStage) {
         //sets primary stage = to window just for readability
         window = primaryStage;
 
@@ -73,8 +74,6 @@ public class Main extends Application {
 
         Pane menu = new Pane();
         Pane difficulty = new Pane();
-
-
 
 
         //creates a group for the radio buttons
@@ -94,10 +93,19 @@ public class Main extends Application {
         hard.setToggleGroup(group);
         hard.setTextFill(Color.WHITE);
 
+
+        CheckBox dup = new CheckBox("Enable Duplicates");
+        dup.setTextFill(Color.WHITE);
+
+
         //relocates the buttons to where they are
-        easy.relocate(100,400);
-        medium.relocate(200,400);
-        hard.relocate(300,400);
+        easy.relocate(100, 400);
+        medium.relocate(200, 400);
+        hard.relocate(300, 400);
+
+        dup.relocate(200, 500);
+
+
 
         //checks to see which box is selected and update the variable diffColors to the value which is associated with a difficulty
         group.selectedToggleProperty().addListener((observableValue, toggle, t1) -> {
@@ -127,10 +135,10 @@ public class Main extends Application {
             guessGroup.getChildren().clear();
 
             if (diffColors >= 4) {
-                Pieces redPiece = makePiece(Color.RED,  6,  5,  true);
-                Pieces greenPiece = makePiece(Color.GREEN, 6,  6,  true);
-                Pieces orangePiece = makePiece(Color.ORANGE, 7,  5,  true);
-                Pieces blackPiece = makePiece(Color.BLACK, 7,  6,  true);
+                Pieces redPiece = makePiece(Color.RED, 6, 5, true);
+                Pieces greenPiece = makePiece(Color.GREEN, 6, 6, true);
+                Pieces orangePiece = makePiece(Color.ORANGE, 7, 5, true);
+                Pieces blackPiece = makePiece(Color.BLACK, 7, 6, true);
 
                 keyGroup.getChildren().addAll(redPiece, greenPiece, blackPiece, orangePiece);
             }
@@ -149,7 +157,7 @@ public class Main extends Application {
             //creates the box's for the keys based on the difficulty
             for (int x = 6; x < 8; x++) {
                 for (int y = 5; y < numBox; y++) {
-                    Guessbox colorOptions = new Guessbox(Color.WHITE,x, y);
+                    Guessbox colorOptions = new Guessbox(Color.WHITE, x, y);
                     guessGroup.getChildren().addAll(colorOptions);
                 }
             }
@@ -168,9 +176,12 @@ public class Main extends Application {
             Pieces keyPiece3 = makePiece(Color.GRAY, 2, 0, false);
             Pieces keyPiece4 = makePiece(Color.GRAY, 3, 0, false);
 
+            Main.duplicateColors = dup.isSelected();
+
             keyGroup.getChildren().addAll(keyPiece1, keyPiece2, keyPiece3, keyPiece4);
 
         });
+
         go.relocate(200, 300);
         go.setPrefSize(100, 50);
 
@@ -185,7 +196,7 @@ public class Main extends Application {
         Text gameTitle = new Text(200, 100, "MasterMind");
         gameTitle.setFill(Color.WHITE);
         gameTitle.setFont(Font.font("Verdana", FontWeight.BOLD, 50));
-        gameTitle.relocate(75,  50);
+        gameTitle.relocate(75, 50);
 
         //makes the background the image in the specified path
         Image background = new Image("File:images/Wood-Background.jpg");
@@ -206,7 +217,7 @@ public class Main extends Application {
 
         Button htp = new Button("How To Play");
         htp.relocate(200, 500);
-        htp.setPrefSize(100,50);
+        htp.setPrefSize(100, 50);
         htp.setOnAction(e -> window.setScene(instructScreen));
 
         //this is if we just want some regular background color instead of an image
@@ -215,13 +226,13 @@ public class Main extends Application {
         //sets the scenes to new scenes which sets width and height.
         //game screen just calls create content because thats where most of the action is
 
-        titleScreen = new Scene(menu,  TILE_SIZE * WIDTH * 2, TILE_SIZE * HEIGHT);
+        titleScreen = new Scene(menu, TILE_SIZE * WIDTH * 2, TILE_SIZE * HEIGHT);
         diffScreen = new Scene(difficulty, TILE_SIZE * WIDTH * 2, TILE_SIZE * HEIGHT);
         instructScreen = new Scene(createInstructions());
 
         //menu is the main menu panel, we add all the buttons and background to the panel
         menu.getChildren().addAll(diffBg, start, gameTitle, options, htp);
-        difficulty.getChildren().addAll(iv, go, easy, medium, hard);
+        difficulty.getChildren().addAll(iv, go, easy, medium, hard, dup);
 
         //makes the window not able to be resized, sets default scene to the title screen and then shows the window
         window.setResizable(false);
@@ -247,7 +258,7 @@ public class Main extends Application {
 
         //new game button
         Button newGame = new Button("New Game");
-        newGame.relocate(6 * TILE_SIZE + (TILE_SIZE / 2),  0);
+        newGame.relocate(6 * TILE_SIZE + (TILE_SIZE / 2), 0);
         newGame.setOnAction(e -> {
             pieceGroup.getChildren().clear();
             pegColors.getChildren().clear();
@@ -272,7 +283,7 @@ public class Main extends Application {
 
         //Guess button, setOnMouseClicked is making a guess
         Button guessButton = new Button("Guess");
-        guessButton.relocate(7 * TILE_SIZE,12 * TILE_SIZE);
+        guessButton.relocate(7 * TILE_SIZE, 12 * TILE_SIZE);
         guessButton.setOnMouseClicked(e -> {
             //for testing purposes
             System.out.println(" " + arr[0] + arr[1] + arr[2] + arr[3]);
@@ -353,10 +364,9 @@ public class Main extends Application {
     }
 
     /**
-     *
-     * @param color passes the color of the piece
-     * @param x location at where the piece will be placed
-     * @param y location at where the piece will be placed
+     * @param color    passes the color of the piece
+     * @param x        location at where the piece will be placed
+     * @param y        location at where the piece will be placed
      * @param moveable if its not moveable then you cannot move it
      * @return returns type Pieces (a new piece)
      */
@@ -381,7 +391,7 @@ public class Main extends Application {
             System.out.println("New X : " + newX + " New Y : " + newY);
 
 
-            if (!(newX > 3 || newY == 0 || newY != turnCount )) {
+            if (!(newX > 3 || newY == 0 || newY != turnCount)) {
 
                 //Checks if you are trying to move a piece that you already placed on the board
                 //if not, move piece to newX and newY, make a new piece at the previous space which is where the key is
@@ -407,7 +417,6 @@ public class Main extends Application {
                 }
 
 
-
                 //System.out.println("Array X: " + arr[newX]);
 
             } else if (newX == 7 && newY == 9) {
@@ -416,38 +425,38 @@ public class Main extends Application {
                 System.out.println("trash");
 
                 switch (piece.hexToString()) {
-                    case "green": piece.move(6, 6);
+                    case "green":
+                        piece.move(6, 6);
                         break;
-                    case "red": piece.move(6, 5);
+                    case "red":
+                        piece.move(6, 5);
                         break;
-                    case "blue": piece.move(6, 7);
+                    case "blue":
+                        piece.move(6, 7);
                         break;
-                    case "orange": piece.move(7, 5);
+                    case "orange":
+                        piece.move(7, 5);
                         break;
-                    case "yellow": piece.move(7, 7);
+                    case "yellow":
+                        piece.move(7, 7);
                         break;
-                    case "black": piece.move(7, 6);
+                    case "black":
+                        piece.move(7, 6);
                         break;
-                    case "purple": piece.move(6, 8);
+                    case "purple":
+                        piece.move(6, 8);
                         break;
-                    case "pink": piece.move(7, 8);
+                    case "pink":
+                        piece.move(7, 8);
                         break;
                 }
 
 
-
-
-
-
-
-
-
-            }  else {
+            } else {
                 //move back to original location
                 piece.move(x0, y0);
                 System.out.println("Out of Bounds");
             }
-
 
 
         });
@@ -457,6 +466,7 @@ public class Main extends Application {
 
     /**
      * this function looks at the GameInstance class and sees how many whitepegs there are and black pegs there are
+     *
      * @return returns instance of Pegs which has the colors and location
      */
     public Pegs getPegColors() {
@@ -487,21 +497,29 @@ public class Main extends Application {
 
         switch (str) {
 
-            case "green": color = Color.GREEN;
+            case "green":
+                color = Color.GREEN;
                 break;
-            case "red": color = Color.RED;
+            case "red":
+                color = Color.RED;
                 break;
-            case "blue": color = Color.BLUE;
+            case "blue":
+                color = Color.BLUE;
                 break;
-            case "orange": color = Color.ORANGE;
+            case "orange":
+                color = Color.ORANGE;
                 break;
-            case "yellow": color = Color.YELLOW;
+            case "yellow":
+                color = Color.YELLOW;
                 break;
-            case "black": color = Color.BLACK;
+            case "black":
+                color = Color.BLACK;
                 break;
-            case "purple": color = Color.PURPLE;
+            case "purple":
+                color = Color.PURPLE;
                 break;
-            case "pink": color = Color.PINK;
+            case "pink":
+                color = Color.PINK;
                 break;
         }
 
@@ -512,7 +530,6 @@ public class Main extends Application {
     }
 
     /**
-     *
      * @param x takes the x location of a piece.
      * @param y takes the y location of a piece.
      * @return returns a string based off of where the piece is located.
@@ -541,7 +558,6 @@ public class Main extends Application {
     }
 
     /**
-     *
      * @param x takes the x location of a piece.
      * @param y takes the y location of a piece.
      * @return returns true or false if the string from keyLocation matches a color.
@@ -550,21 +566,29 @@ public class Main extends Application {
         String temp = keyLocation(x, y);
         boolean result = false;
         switch (temp) {
-            case "green": result = true;
+            case "green":
+                result = true;
                 break;
-            case "red": result = true;
+            case "red":
+                result = true;
                 break;
-            case "blue": result = true;
+            case "blue":
+                result = true;
                 break;
-            case "orange": result = true;
+            case "orange":
+                result = true;
                 break;
-            case "yellow": result = true;
+            case "yellow":
+                result = true;
                 break;
-            case "black": result = true;
+            case "black":
+                result = true;
                 break;
-            case "purple": result = true;
+            case "purple":
+                result = true;
                 break;
-            case "pink": result = true;
+            case "pink":
+                result = true;
                 break;
         }
 
@@ -574,21 +598,28 @@ public class Main extends Application {
     private Parent createInstructions() {
         Pane root = new Pane();
 
+
         root.setPrefSize((WIDTH * TILE_SIZE) * 2, (HEIGHT * TILE_SIZE) + TILE_SIZE);
         Text title = new Text("How to Play");
         title.setFill(Color.BLACK);
         title.setFont(Font.font("Verdana", FontWeight.BOLD, 50));
-        title.relocate(75,  50);
+        title.relocate(75, 50);
 
-        Text instructions = new Text("The code maker will use the white pegs, "
-                 + "which indicate each peg that is a correct color but wrong position, or a black peg to indicate each peg is in a correct position and a right color. "
-                 + " If neither are true, then no peg should be placed. The code maker may place these pegs in any order in the peg holes arranged in the square pattern next to the line of peg holes holding the guess pegs being answered."
-                 + "The answer and guess pegs stay in their positions until the end of the game."
-                 + "Play continues until the code is discovered or there are no remaining guesses.");
+        Text instructions = new Text("The code maker is an AI who will use the white pegs, "
+                + "which indicate each peg that is a correct color but wrong position, or a black peg to indicate each peg is in a correct position and a right color. "
+                + " If neither are true, then no peg should be placed. The code maker may place these pegs "
+                + "in any order in the peg holes arranged in the square pattern next to the line of peg holes holding the guess pegs being answered."
+                + "The answer and guess pegs stay in their positions until the end of the game."
+                + "Play continues until the code is discovered or there are no remaining guesses.");
         instructions.relocate(75, 150);
         instructions.setWrappingWidth(TILE_SIZE * 6);
 
-        root.getChildren().addAll(title, instructions);
+        Button menu = new Button("Menu");
+        menu.relocate(7 * TILE_SIZE, TILE_SIZE);
+        menu.setOnAction(e -> window.setScene(titleScreen));
+
+
+        root.getChildren().addAll(title, instructions, menu);
         return root;
     }
 
