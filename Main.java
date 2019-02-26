@@ -31,40 +31,94 @@ import static gameLogic.GameInstance.whitepegs;
 
 public class Main extends Application {
 
-    //Creates constant for tile size, height and width which are easily accessed throughout project
-    public static final int TILE_SIZE = 60;
-    public static int HEIGHT = 12;
-    public static int WIDTH = 4;
-    public static int diffColors = 6;
-    public static int numBox = 8;
+    //Creates constant for tile size, height and width
+    //which are easily accessed throughout project
 
+    /**
+     * integer that holds the size of each tile.
+     */
+    static final int TILE_SIZE = 60;
+
+    /**
+     * The height of the tiles in the guessing area.
+     */
+    private static final int HEIGHT = 12;
+
+    /**
+     * The width of the tiles in guessing area.
+     */
+    private static final int WIDTH = 4;
+
+    /**
+     * How many colors there are in the game.
+     */
+    public static int diffColors = 6;
+
+    /**
+     * Changes with each difficulty and is the number of boxes
+     * that holds the color.
+     */
+    private static int numBox = 8;
+
+    /**
+     * Enables or disables duplicate colors to be in the key.
+     */
     public static boolean duplicateColors = true;
 
-    //these are all of the groups that different items get added to which get added to the root pane in createcontent()
+    /**
+     * Group for the square boxes on screen.
+     */
     private Group guessGroup = new Group();
+
+    /**
+     * Group for the pieces that are placed on the board.
+     */
     private Group pieceGroup = new Group();
+
+    /**
+     * Group for the peg shells that stay the same all game.
+     */
     private Group pegGroup = new Group();
+
+    /**
+     * Group for the pieces that we are guessing from and the answer.
+     */
     private Group keyGroup = new Group();
+
+    /**
+     * Group for the colors of the pegs to be placed into the peg shells.
+     */
     private Group pegColors = new Group();
 
-
-    //arr is the array that is populated with colors once the 'guess' button is pressed. it is compared to the answer inside of Game Instance
-    //pegArr is the array of peg colors
+    /**
+     * Array that is compared to with the answer every turn.
+     */
     private String[] arr = new String[4];
+
+    /**
+     * Array that holds the colors for the pegs.
+     */
     private Color[] pegArr = new Color[4];
 
-    //starts new game instance
+    /**
+     * New game instance which contains the logic for the game.
+     */
     private GameInstance game;
 
-    //window is the window that contains the scene and stage
-    //Scene is which scene is showing (title screen, game screen etc...)
+    /**
+     * Stage which displays all a scene for the game.
+     */
     private Stage window;
 
+    /**
+     * All of the scenes which are placed into the window.
+     */
     private Scene titleScreen, gameScreen, diffScreen, instructScreen;
 
 
     /**
-     * @param primaryStage input for a stage which is the thing that will be displayed to the user.
+     * @param primaryStage input for a stage which is the thing
+     * that will be displayed to the user.
      */
     public void start(final Stage primaryStage) {
         //sets primary stage = to window just for readability
@@ -107,7 +161,8 @@ public class Main extends Application {
 
 
 
-        //checks to see which box is selected and update the variable diffColors to the value which is associated with a difficulty
+        //checks to see which box is selected and update the variable
+        //diffColors to the value which is associated with a difficulty
         group.selectedToggleProperty().addListener((observableValue, toggle, t1) -> {
             if (hard.isSelected()) {
                 diffColors = 8;
@@ -186,7 +241,8 @@ public class Main extends Application {
         go.setPrefSize(100, 50);
 
 
-        //Start button code, setOnAction contains code for when the button is pressed
+        //Start button code, setOnAction contains code for
+        //when the button is pressed
         Button start = new Button("Start");
         start.setOnAction(e -> window.setScene(diffScreen));
         start.relocate(200, 300);
@@ -220,21 +276,25 @@ public class Main extends Application {
         htp.setPrefSize(100, 50);
         htp.setOnAction(e -> window.setScene(instructScreen));
 
-        //this is if we just want some regular background color instead of an image
+        //this is if we just want some regular
+        //background color instead of an image
         //menu.setStyle("-fx-background-color: #8B4513;");
 
         //sets the scenes to new scenes which sets width and height.
-        //game screen just calls create content because thats where most of the action is
+        //game screen just calls create content because thats where
+        //most of the action is
 
         titleScreen = new Scene(menu, TILE_SIZE * WIDTH * 2, TILE_SIZE * HEIGHT);
         diffScreen = new Scene(difficulty, TILE_SIZE * WIDTH * 2, TILE_SIZE * HEIGHT);
         instructScreen = new Scene(createInstructions());
 
-        //menu is the main menu panel, we add all the buttons and background to the panel
+        //menu is the main menu panel,
+        //we add all the buttons and background to the panel
         menu.getChildren().addAll(diffBg, start, gameTitle, options, htp);
         difficulty.getChildren().addAll(iv, go, easy, medium, hard, dup);
 
-        //makes the window not able to be resized, sets default scene to the title screen and then shows the window
+        //makes the window not able to be resized, sets default scene
+        //to the title screen and then shows the window
         window.setResizable(false);
         window.setScene(titleScreen);
         window.show();
@@ -262,8 +322,9 @@ public class Main extends Application {
         newGame.setOnAction(e -> {
             pieceGroup.getChildren().clear();
             pegColors.getChildren().clear();
-            for (int i = 0; i < arr.length; i++)
+            for (int i = 0; i < arr.length; i++) {
                 arr[i] = null;
+            }
             game = new GameInstance();
 
 
@@ -290,14 +351,15 @@ public class Main extends Application {
 
             //check if all of the tiles in the row have a piece on them
             if (!(arr[0] == null || arr[1] == null || arr[2] == null || arr[3] == null)) {
-                //calls guess and then creates a new instance of the Pegs class and gets peg colors based on if the array matches
+                //calls guess, creates pegs, gets peg colors.
                 game.guess(arr[0], arr[1], arr[2], arr[3]);
                 Pegs peg = getPegColors();
 
                 //adds the peg color array to the pegColors group
                 pegColors.getChildren().addAll(peg);
 
-                //if you get all black pegs (win), show the key up top and set turn count to 14 so no more pieces can be placed
+                //if you get all black pegs (win), show the key up top and
+                //set turn count to 14 so no more pieces can be placed
                 if (blackpegs == 4) {
                     System.out.println("You win");
                     Pieces answer1 = makePiece(stringToColor(game.getAnswer()[0]), 0, 0, false);
@@ -323,19 +385,22 @@ public class Main extends Application {
                 blackpegs = 0;
                 whitepegs = 0;
                 //clears the array that we are comparing to
-                for (int i = 0; i < arr.length; i++)
+                for (int i = 0; i < arr.length; i++) {
                     arr[i] = null;
+                }
             } else {
                 System.out.println("Please Place All Pieces");
             }
         });
 
 
-        //Makes the window 2 times longer than the area of the guessing for room for pegs and other colors to pick from.
+        //Makes the window 2 times longer than the area of the guessing
+        //for room for pegs and other colors to pick from.
         //May need to make it wider or smaller depending on the items in game
         root.setPrefSize((WIDTH * TILE_SIZE) * 2, (HEIGHT * TILE_SIZE) + TILE_SIZE);
 
-        //here is where everything is added to the root which is indirectly added to the gameScreen scene
+        //here is where everything is added to the root
+        //which is indirectly added to the gameScreen scene
 
 
         //Creates the shell for the pegs that will soon be filled with colors
@@ -344,13 +409,16 @@ public class Main extends Application {
             pegGroup.getChildren().add(defaultPegs);
         }
 
-        //we have a seperate group for the keys because when we start a new game we just need to clear the pieceGroup and leave the keys alone.
-        //this code adds all of the key pieces listed above to the keyGroup which is indirectly added to the gameScreen.
+        //we have a seperate group for the keys because when we start a new game
+        //we just need to clear the pieceGroup and leave the keys alone.
+        //this code adds all of the key pieces listed above to the keyGroup
+        //which is indirectly added to the gameScreen.
 
         root.getChildren().addAll(iv, tc, guessGroup, pegGroup, keyGroup, pieceGroup, pegColors, guessButton, newGame, menu);
 
 
-        //returns the root pane which gets passed to the new Scene() in the start method
+        //returns the root pane which gets passed to the new Scene()
+        //in the start method
         return root;
 
     }
@@ -375,10 +443,10 @@ public class Main extends Application {
         Pieces piece = new Pieces(color, x, y, moveable);
 
 
-        //when the mouse is released, the OldX value, OldY value, newX value and newY value are updated
+        //when the mouse is released, the OldX, OldY, newX and newY are updated
         piece.setOnMouseReleased(e -> {
 
-            //these locations are where you are trying to place the piece on the board
+            //where you are trying to place the piece on the board
             int newX = toBoard(piece.getLayoutX());
             int newY = toBoard(piece.getLayoutY());
 
@@ -393,9 +461,10 @@ public class Main extends Application {
 
             if (!(newX > 3 || newY == 0 || newY != turnCount)) {
 
-                //Checks if you are trying to move a piece that you already placed on the board
-                //if not, move piece to newX and newY, make a new piece at the previous space which is where the key is
-                //update the array with the piece color and add the piece to the pieceGroup group
+                //Checks if you are trying to move a piece that you placed
+                //if not, move piece to newX and newY,
+                //make a new piece at the previous space
+                //update array with piece color and add the piece pieceGroup
                 //else if checks if the piece if coming from a key spot and if so then override the first if statement
                 if (!(pieceGroup.getChildren().contains(piece))) {
                     piece.move(newX, newY);
@@ -419,8 +488,9 @@ public class Main extends Application {
 
                 //System.out.println("Array X: " + arr[newX]);
 
-            } else if (newX == 7 && newY == 9) {
-                //checks if piece is dropped on the garbage can, if so it moves the piece to the spot where the key is for that color
+            } else if (newX == 7 && newY == 9 && y0 == turnCount) {
+                //checks if piece is dropped on the garbage can,
+                //if so it moves the piece to the spot where the key is for that color
 
                 System.out.println("trash");
 
@@ -449,7 +519,9 @@ public class Main extends Application {
                     case "pink":
                         piece.move(7, 8);
                         break;
+                    default: piece.move(0,0);
                 }
+                arr[x0] = null;
 
 
             } else {
@@ -465,20 +537,21 @@ public class Main extends Application {
     }
 
     /**
-     * this function looks at the GameInstance class and sees how many whitepegs there are and black pegs there are
+     * this function looks at the GameInstance class and
+     * sees how many whitepegs there are and black pegs there are.
      *
-     * @return returns instance of Pegs which has the colors and location
+     * @return returns instance of Pegs which has the colors and location.
      */
     public Pegs getPegColors() {
 
         System.out.println("blackPegs: " + blackpegs);
         System.out.println("whitePegs: " + whitepegs);
 
-        //checks if you have any black pegs, if so then update the pegArr to the color black
+        //checks if you have any black pegs, if so update pegArr to black
         for (int i = 0; i < blackpegs; i++) {
             pegArr[i] = Color.BLACK;
         }
-        //checks if you have any white pegs, if so then update the pegArr to the color White
+        //checks if you have white pegs, if so update the pegArr to White
         for (int i = blackpegs; i < whitepegs + blackpegs; i++) {
             pegArr[i] = Color.WHITE;
         }
@@ -492,7 +565,13 @@ public class Main extends Application {
     }
 
     //converts the string of a color to an actual javafx.scene.Color
-    public Color stringToColor(final String str) {
+
+    /**
+     *
+     * @param str string to convert to a javafx Color
+     * @return returns a javafx Color
+     */
+    private Color stringToColor(final String str) {
         Color color = Color.TRANSPARENT;
 
         switch (str) {
@@ -521,6 +600,7 @@ public class Main extends Application {
             case "pink":
                 color = Color.PINK;
                 break;
+            default: color = Color.TRANSPARENT;
         }
 
 
@@ -534,24 +614,25 @@ public class Main extends Application {
      * @param y takes the y location of a piece.
      * @return returns a string based off of where the piece is located.
      */
-    public String keyLocation(int x, int y) {
+    private String keyLocation(int x, int y) {
 
-        if (x == 6 && y == 6)
+        if (x == 6 && y == 6) {
             return "green";
-        else if (x == 6 && y == 5)
+        } else if (x == 6 && y == 5) {
             return "red";
-        else if (x == 6 && y == 7)
+        } else if (x == 6 && y == 7) {
             return "blue";
-        else if (x == 7 && y == 5)
+        } else if (x == 7 && y == 5) {
             return "orange";
-        else if (x == 7 && y == 7)
+        } else if (x == 7 && y == 7) {
             return "yellow";
-        else if (x == 7 && y == 6)
+        } else if (x == 7 && y == 6) {
             return "black";
-        else if (x == 6 && y == 8)
+        } else if (x == 6 && y == 8) {
             return "purple";
-        else if (x == 7 && y == 8)
+        } else if (x == 7 && y == 8) {
             return "pink";
+        }
 
         return "";
 
@@ -560,11 +641,11 @@ public class Main extends Application {
     /**
      * @param x takes the x location of a piece.
      * @param y takes the y location of a piece.
-     * @return returns true or false if the string from keyLocation matches a color.
+     * @return returns true or false if string from keyLocation matches a color.
      */
-    public boolean keySpace(int x, int y) {
+    private boolean keySpace(int x, int y) {
         String temp = keyLocation(x, y);
-        boolean result = false;
+        boolean result;
         switch (temp) {
             case "green":
                 result = true;
@@ -590,11 +671,16 @@ public class Main extends Application {
             case "pink":
                 result = true;
                 break;
+            default: result = false;
         }
 
         return result;
     }
 
+    /**
+     * Create the contents of the scene for the how to play category.
+     * @return returns root which is a pane used by the window.
+     */
     private Parent createInstructions() {
         Pane root = new Pane();
 
@@ -623,6 +709,10 @@ public class Main extends Application {
         return root;
     }
 
+    /**
+     * Main method.
+     * @param args args.
+     */
     public static void main(String[] args) {
 
         launch(args);

@@ -3,20 +3,47 @@ package gameLogic;
 
 import gamePackage.Main;
 
-import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * Logic for the game.
+ */
 public class GameInstance {
+
+    /**
+     * tells the game class if the game is over or not.
+     */
     private boolean ongoing;
+
+    /**
+     * tells what turn the player is on.
+     */
     public static int turnCount;
+
+    /**
+     * Answer to the key that the user is trying to guess.
+     */
     private Move answer;
 
+    /**
+     * number of black pegs on any given guess.
+     */
     public static int blackpegs = 0;
+
+    /**
+     * number of white pegs on any given guess.
+     */
     public static int whitepegs = 0;
 
-    String[] colorz = new String[Main.diffColors];
+    /**
+     * Array for picking a random color when enable duplicates is off.
+     */
+    private String[] colorz = new String[Main.diffColors];
 
-
+    /**
+     * Constructor for GameInstance, set ongoing to true, populates colors,
+     * makes an answer, sets the pegs and turn count to starting position.
+     */
     public GameInstance() {
         this.ongoing = true;
 
@@ -61,6 +88,11 @@ public class GameInstance {
     }
 
 
+    /**
+     * Generates a random color and if enable duplicate colors is off,
+     * generate 4 random different colors.
+     * @return returns a color as a string.
+     */
     private String randomColor() {
 
         String s;
@@ -74,14 +106,24 @@ public class GameInstance {
         if (!Main.duplicateColors) {
             colorz[random] = null;
 
-            if (s != null)
+            if (s != null) {
                 return s;
-            else
+            } else {
                 return randomColor();
-        } else
+            }
+        } else {
             return s;
+        }
     }
 
+    /**
+     * Guesses a color which then populates the peg arrays based on if their
+     * answer was right or wrong.
+     * @param color1 first color guessed.
+     * @param color2 second color guessed.
+     * @param color3 third color guessed.
+     * @param color4 fourth color guessed.
+     */
     public void guess(String color1, String color2, String color3, String color4) {
         if (ongoing) {
 

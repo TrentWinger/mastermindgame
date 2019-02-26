@@ -5,29 +5,57 @@ import javafx.scene.shape.Circle;
 
 import javafx.scene.paint.Color;
 
-public class Pieces extends StackPane {
+/**
+ * Pieces contains the game pieces which are eventually moved to the guessbox
+ * class to be guessed against the key.
+ */
+class Pieces extends StackPane {
 
+    /**
+     * Old position that the mouse was on for X and Y value.
+     */
     private double oldX, oldY;
+
+    /**
+     * The current location of the mouse for X and Y values.
+     */
     private double mouseX, mouseY;
+
+    /**
+     * Color of the piece that we are working with.
+     */
     private Color color;
 
-    public Color getColor() {
+    /**
+     * gets the color of the current piece.
+     * @return returns a color.
+     */
+    private Color getColor() {
         return color;
     }
 
-    public double getOldX() {
+    /**
+     * gets the value of OldX.
+     * @return returns value of OldX
+     */
+    double getOldX() {
         return oldX;
     }
 
-    public double getOldY() {
+    /**
+     * gets the value of OldY.
+     * @return returns value of OldY
+     */
+    double getOldY() {
         return oldY;
     }
 
     /**
-     * @return returns a string that was converted from the Color.scene.paint.Color 'hex' value.
+     * @return returns a string that was converted
+     * from the Color.scene.paint.Color 'hex' value.
      */
-    public String hexToString() {
-        String color = "";
+    String hexToString() {
+        String color;
         String temp = getColor().toString();
 
         switch (temp) {
@@ -55,12 +83,20 @@ public class Pieces extends StackPane {
             case "0x800080ff":
                 color = "purple";
                 break;
+            default: color = "";
         }
 
         return color;
     }
 
-    public Pieces(Color color, int x, int y, boolean moveable){
+    /**
+     *
+     * @param color takes in the color of the piece.
+     * @param x x location of the piece.
+     * @param y y location of the piece.
+     * @param moveable tells us if the piece can be moved.
+     */
+    Pieces(Color color, int x, int y, boolean moveable) {
         this.color = color;
 
         move(x, y);
@@ -69,8 +105,8 @@ public class Pieces extends StackPane {
         crc.setFill(color);
 
         //this formula centers the circle inside the tile
-        crc.setTranslateX((Main.TILE_SIZE - Main.TILE_SIZE * .45 * 2) /2);
-        crc.setTranslateY((Main.TILE_SIZE - Main.TILE_SIZE * .45 * 2) /2);
+        crc.setTranslateX((Main.TILE_SIZE - Main.TILE_SIZE * .45 * 2) / 2);
+        crc.setTranslateY((Main.TILE_SIZE - Main.TILE_SIZE * .45 * 2) / 2);
 
         getChildren().add(crc);
 
@@ -81,16 +117,18 @@ public class Pieces extends StackPane {
 
             });
 
-            setOnMouseDragged(e -> {
-                relocate(e.getSceneX() - mouseX + oldX, e.getSceneY() - mouseY + oldY);
-
-            });
+            setOnMouseDragged(e -> relocate(e.getSceneX() - mouseX + oldX, e.getSceneY() - mouseY + oldY));
 
         }
     }
 
 
-    public void move(int x, int y) {
+    /**
+     * moves a piece.
+     * @param x x location to be moved to.
+     * @param y y location to be moved to.
+     */
+    void move(int x, int y) {
         oldX = x * Main.TILE_SIZE;
         oldY = y * Main.TILE_SIZE;
         relocate(oldX, oldY);
