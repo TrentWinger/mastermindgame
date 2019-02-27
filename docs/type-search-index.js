@@ -1,1 +1,1 @@
-typeSearchIndex = [{"l":"All Classes","url":"allclasses-index.html"},{"p":"gamelogic","l":"Move"}]
+typeSearchIndex = [{"l":"All Classes","url":"allclasses-index.html"},{"p":"gamelogic","l":"GameInstance"},{"p":"gamepackage","l":"Guessbox"},{"p":"gamepackage","l":"Main"},{"p":"gamelogic","l":"Move"},{"p":"gamepackage","l":"Pegs"},{"p":"gamepackage","l":"Pieces"}]
