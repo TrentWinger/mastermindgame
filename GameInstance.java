@@ -87,6 +87,21 @@ public class GameInstance {
         return temp;
     }
 
+    /**
+     * Sets the answer for the GameInstance.
+     * Used for debugging.
+     * @param color1 first color passed.
+     * @param color2 second color passed.
+     * @param color3 third color passed.
+     * @param color4 fourth color passed.
+     */
+    public void setAnswer(String color1, String color2, String color3, String color4){
+        this.answer.orderArray[0] = color1;
+        this.answer.orderArray[1] = color2;
+        this.answer.orderArray[2] = color3;
+        this.answer.orderArray[3] = color4;
+    }
+
 
     /**
      * Generates a random color and if enable duplicate colors is off,
