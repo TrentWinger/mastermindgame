@@ -7,11 +7,6 @@ import org.junit.Assert
 class UnitTesting {
 
     @Test
-    public void testTest(){
-        Assert.assertTrue(5==5);
-    }
-
-    @Test
     public void testCreateGame(){
         GameInstance game = new GameInstance();
         Assert.assertTrue(game.turnCount == 12);
