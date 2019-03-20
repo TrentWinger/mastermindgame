@@ -312,7 +312,7 @@ public class Main extends Application {
 
         Text playerLabel = new Text("Player 2");
         playerLabel.setFill(Color.BLACK);
-        playerLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 10));
+        playerLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
         playerLabel.relocate(4 * TILE_SIZE + (TILE_SIZE / 2), 0);
 
         //new game button
@@ -341,9 +341,7 @@ public class Main extends Application {
         tc.setFitHeight(TILE_SIZE);
         tc.relocate(7 * TILE_SIZE, 9 * TILE_SIZE);
 
-        Button flip = new Button("flip");
-        flip.relocate(6 * TILE_SIZE, 12 * TILE_SIZE);
-        flip.setOnMouseClicked(e -> window.setScene(gameScreen));
+
 
 
         //Guess button, setOnMouseClicked is making a guess
@@ -392,7 +390,7 @@ public class Main extends Application {
                 for (int i = 0; i < p2arr.length; i++) {
                     p2arr[i] = null;
                 }
-                flip.setDisable(!player1Turn);
+                guessButton.setDisable(!player1Turn);
             } else {
                 System.out.println("Please Place All Pieces");
             }
@@ -404,6 +402,13 @@ public class Main extends Application {
 
         });
 
+        Button flip = new Button("flip");
+        flip.relocate(6 * TILE_SIZE, 12 * TILE_SIZE);
+        flip.setOnMouseClicked(e -> {
+            window.setScene(gameScreen);
+            guessButton.setDisable(false);
+
+        });
 
         //Makes the window 2 times longer than the area of the guessing
         //for room for pegs and other colors to pick from.
@@ -450,7 +455,7 @@ public class Main extends Application {
 
         Text playerLabel = new Text("Player 1");
         playerLabel.setFill(Color.BLACK);
-        playerLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 10));
+        playerLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
         playerLabel.relocate(4 * TILE_SIZE + (TILE_SIZE / 2), 0);
 
         //new game button
@@ -478,14 +483,6 @@ public class Main extends Application {
         tc.setFitWidth(TILE_SIZE - 10);
         tc.setFitHeight(TILE_SIZE);
         tc.relocate(7 * TILE_SIZE, 9 * TILE_SIZE);
-
-        Button flip = new Button("flip");
-        if (isTwoPlayer) {
-            flip.relocate(6 * TILE_SIZE, 12 * TILE_SIZE);
-            flip.setOnMouseClicked(e -> window.setScene(player2screen));
-        } else {
-            flip.setOpacity(0);
-        }
 
 
         //Guess button, setOnMouseClicked is making a guess
@@ -516,7 +513,9 @@ public class Main extends Application {
                     turnCount = 14;
                 }
 
-
+                if (!isTwoPlayer) {
+                    turnCount--;
+                }
 
                 //if you run out of turns (lose), show the key
                 if (turnCount == 0) {
@@ -534,7 +533,9 @@ public class Main extends Application {
                 for (int i = 0; i < arr.length; i++) {
                     arr[i] = null;
                 }
-                guessButton.setDisable(player1Turn);
+                if (isTwoPlayer) {
+                    guessButton.setDisable(player1Turn);
+                }
 
             } else {
                 System.out.println("Please Place All Pieces");
@@ -544,6 +545,18 @@ public class Main extends Application {
 
         });
 
+
+        Button flip = new Button("flip");
+        if (isTwoPlayer) {
+            flip.relocate(6 * TILE_SIZE, 12 * TILE_SIZE);
+            flip.setOnMouseClicked(e -> {
+                window.setScene(player2screen);
+                guessButton.setDisable(false);
+
+            });
+        } else {
+            flip.setOpacity(0);
+        }
 
         //Makes the window 2 times longer than the area of the guessing
         //for room for pegs and other colors to pick from.
@@ -768,8 +781,9 @@ public class Main extends Application {
 
 
             if (player1) {
-                if (!(newX > 3 || newY == 0 || newY != turnCount)) {
+                if (!(newX > 3 || newY == 0 || newY != turnCount || !player1Turn)) {
 
+                    System.out.println("p1t " + player1Turn);
                     //Checks if you are trying to move a piece that you placed
                     //if not, move piece to newX and newY,
                     //make a new piece at the previous space
@@ -840,7 +854,8 @@ public class Main extends Application {
                     System.out.println("Out of Bounds");
                 }
             } else {
-                if (!(newX > 3 || newY == 0 || newY != turnCount)) {
+                if (!(newX > 3 || newY == 0 || newY != turnCount || player1Turn)) {
+
 
                     //Checks if you are trying to move a piece that you placed
                     //if not, move piece to newX and newY,
