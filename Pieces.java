@@ -96,7 +96,7 @@ class Pieces extends StackPane {
      * @param y y location of the piece.
      * @param moveable tells us if the piece can be moved.
      */
-    Pieces(Color color, int x, int y, boolean moveable) {
+    Pieces(Color color, int x, int y, boolean moveable, boolean player1) {
         this.color = color;
 
         move(x, y);
