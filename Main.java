@@ -21,7 +21,9 @@ import javafx.stage.Stage;
 import javafx.scene.control.CheckBox;
 
 
+import javax.swing.*;
 import java.util.HashMap;
+
 
 import static gameLogic.GameInstance.turnCount;
 import static gameLogic.GameInstance.blackpegs;
@@ -37,10 +39,12 @@ public class Main extends Application {
     //Creates constant for tile size, height and width
     //which are easily accessed throughout project
 
+    private Text timerText;
+
     /**
      * storing guess for AI.
      */
-    HashMap<Integer, HashMap<String[], Integer[]>> map = new HashMap<>();
+    private HashMap<Integer, HashMap<String[], Integer[]>> map = new HashMap<>();
 
     /**
      * integer that holds the size of each tile.
@@ -116,11 +120,6 @@ public class Main extends Application {
     private String[] p2arr = new String[4];
 
     /**
-     * Array that holds the colors for the pegs.
-     */
-    private Color[] p2pegArr = new Color[4];
-
-    /**
      * Group for the pieces that we are guessing from and the answer.
      */
     private Group p2keyGroup = new Group();
@@ -175,8 +174,30 @@ public class Main extends Application {
      */
     private Scene titleScreen, gameScreen, diffScreen, instructScreen, gameModeScreen, player2screen;
 
+
     /**
-     * Creates the changeable content for the plapyer 2 game.
+     * Allows the timer to be stopped and started.
+     */
+    private boolean running = false;
+
+    /**
+     * Timer for the game to keep track of how long each game takes.
+     */
+    private Timer gameTimer;
+
+    /**
+     * Keeps track of amount of seconds it took to play a game.
+     */
+    private int seconds = 0;
+
+    /**
+     * Keeps track of the amount of minutes it took to play a game.
+     */
+    private int minutes = 0;
+
+
+    /**
+     * Creates the changeable content for the player 2 game.
      */
     private void createp2game() {
         p2pieceGroup.getChildren().clear();
@@ -246,7 +267,7 @@ public class Main extends Application {
      */
     private void createGame() {
 
-        System.out.println(Color.GRAY.toString());
+
 
         game = new GameInstance();
         pieceGroup.getChildren().clear();
@@ -327,13 +348,15 @@ public class Main extends Application {
 
         Text playerLabel = new Text("Player 2");
         playerLabel.setFill(Color.BLACK);
-        playerLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
-        playerLabel.relocate(4 * TILE_SIZE + (TILE_SIZE / 2), 0);
+        playerLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 13));
+        playerLabel.relocate(7 * TILE_SIZE, 11.5 * TILE_SIZE);
 
         //new game button
         Button newGame = new Button("New Game");
         newGame.relocate(6 * TILE_SIZE + (TILE_SIZE / 2), 0);
         newGame.setOnAction(e -> {
+            seconds = 0;
+            minutes = 0;
             p2pieceGroup.getChildren().clear();
             p2pegColors.getChildren().clear();
             for (int i = 0; i < p2arr.length; i++) {
@@ -346,13 +369,17 @@ public class Main extends Application {
 
         Button menu = new Button("Menu");
         menu.relocate(7 * TILE_SIZE, TILE_SIZE);
-        menu.setOnAction(e -> window.setScene(titleScreen));
+        menu.setOnAction(e -> {
+            gameTimer.restart();
+            running = false;
+            window.setScene(titleScreen);
+        });
 
         //image for the trash can below the colors
         Image trashCan = new Image("File:images/Trash-Can.png");
         ImageView tc = new ImageView();
         tc.setImage(trashCan);
-        tc.setFitWidth(TILE_SIZE - 10);
+        tc.setFitWidth(TILE_SIZE);
         tc.setFitHeight(TILE_SIZE);
         tc.relocate(7 * TILE_SIZE, 9 * TILE_SIZE);
 
@@ -392,10 +419,10 @@ public class Main extends Application {
                 pegsAI[1] = whitepegs;
 
                 HashMap<String[], Integer[]> turnAndPegs = new HashMap<>();
-                turnAndPegs.put(p2arr,pegsAI);
+                turnAndPegs.put(p2arr, pegsAI);
 
                 map.put(turnCount, turnAndPegs);
-                System.out.println(map);
+
 
                 turnCount--;
 
@@ -484,13 +511,21 @@ public class Main extends Application {
 
         Text playerLabel = new Text("Player 1");
         playerLabel.setFill(Color.BLACK);
-        playerLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
-        playerLabel.relocate(4 * TILE_SIZE + (TILE_SIZE / 2), 0);
+        playerLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 13));
+        playerLabel.relocate(7 * TILE_SIZE, 11.5 * TILE_SIZE);
+
+
+        timerText = new Text("00:00:00");
+        timerText.setFill(Color.BLACK);
+        timerText.setFont(Font.font("Verdana", FontWeight.BOLD, 13));
+        timerText.relocate(5 * TILE_SIZE,  0);
 
         //new game button
         Button newGame = new Button("New Game");
         newGame.relocate(6 * TILE_SIZE + (TILE_SIZE / 2), 0);
         newGame.setOnAction(e -> {
+             seconds = 0;
+             minutes = 0;
             pieceGroup.getChildren().clear();
             pegColors.getChildren().clear();
             for (int i = 0; i < arr.length; i++) {
@@ -503,7 +538,11 @@ public class Main extends Application {
 
         Button menu = new Button("Menu");
         menu.relocate(7 * TILE_SIZE, TILE_SIZE);
-        menu.setOnAction(e -> window.setScene(titleScreen));
+        menu.setOnAction(e -> {
+            gameTimer.restart();
+            running = false;
+            window.setScene(titleScreen);
+        });
 
         //image for the trash can below the colors
         Image trashCan = new Image("File:images/Trash-Can.png");
@@ -607,7 +646,7 @@ public class Main extends Application {
         //this code adds all of the key pieces listed above to the keyGroup
         //which is indirectly added to the gameScreen.
 
-        root.getChildren().addAll(iv, tc, guessGroup, pegGroup, keyGroup, pieceGroup, pegColors, guessButton, newGame, flip, menu, playerLabel);
+        root.getChildren().addAll(iv, tc, guessGroup, pegGroup, keyGroup, pieceGroup, pegColors, guessButton, newGame, flip, menu, playerLabel, timerText);
 
         //returns the root pane which gets passed to the new Scene()
         //in the start method
@@ -692,6 +731,37 @@ public class Main extends Application {
 
             createGame();
 
+            seconds = 0;
+            minutes = 0;
+            running = true;
+            gameTimer = new Timer(1000, e1 -> {
+                if (!running) {
+                    gameTimer.stop();
+                }
+
+                seconds++;
+                if (seconds > 59) {
+                    minutes++;
+                    seconds = 0;
+                }
+
+                if (seconds < 10) {
+                    if (minutes < 10) {
+                        timerText.setText("00:" + "0" + minutes + ":0" + seconds);
+                    } else {
+                        timerText.setText("00:" + minutes + ":0" + seconds);
+                    }
+                } else {
+                    if (minutes < 10) {
+                        timerText.setText("00:" + "0" + minutes + ":" + seconds);
+                    } else {
+                        timerText.setText("00:" + minutes + ":" + seconds);
+                    }
+                }
+
+
+            });
+            gameTimer.start();
 
 
             Main.duplicateColors = dup.isSelected();
