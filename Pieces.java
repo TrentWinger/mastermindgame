@@ -129,6 +129,9 @@ class Pieces extends StackPane {
             case "0x800080ff":
                 img = "Piece_Purple.png";
                 break;
+            case "0x808080ff":
+                img = "Piece_Grey.png";
+                break;
             default: img = "";
         }
 

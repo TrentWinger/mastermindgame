@@ -16,7 +16,7 @@ class Guessbox extends Rectangle {
      * @param x x location of the box.
      * @param y y location of the box.
      */
-    Guessbox(Color color, int x, int y) {
+    Guessbox(final Color color, final int x, final int y) {
         //Sets the width and height of a tile
         setWidth(Main.TILE_SIZE);
         setHeight(Main.TILE_SIZE);

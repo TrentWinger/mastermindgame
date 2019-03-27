@@ -3,7 +3,6 @@ package gamePackage;
 import gameLogic.GameInstance;
 
 import javafx.application.Application;
-import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -18,8 +17,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
-import javafx.stage.Popup;
-import javafx.stage.PopupWindow;
 import javafx.stage.Stage;
 import javafx.scene.control.CheckBox;
 
@@ -171,6 +168,9 @@ public class Main extends Application {
      */
     private Scene titleScreen, gameScreen, diffScreen, instructScreen, gameModeScreen, player2screen;
 
+    /**
+     * Creates the changeable content for the plapyer 2 game.
+     */
     private void createp2game() {
         p2pieceGroup.getChildren().clear();
         p2keyGroup.getChildren().clear();
@@ -234,8 +234,12 @@ public class Main extends Application {
         window.setScene(gameScreen);
     }
 
+    /**
+     * Create the changeable content for the game for player 1.
+     */
     private void createGame() {
 
+        System.out.println(Color.GRAY.toString());
 
         game = new GameInstance();
         pieceGroup.getChildren().clear();
@@ -298,6 +302,10 @@ public class Main extends Application {
         window.setScene(gameScreen);
     }
 
+    /**
+     * Creates the content for the player 2 game, this data is static.
+     * @return returns the root pane which is displayed on the screen.
+     */
     private Parent createp2Content() {
         Pane root = new Pane();
 
@@ -384,6 +392,8 @@ public class Main extends Application {
                     p2pieceGroup.getChildren().addAll(answer1, answer2, answer3, answer4);
                 }
                 //System.out.println("turns left: " + turnCount);
+
+
                 blackpegs = 0;
                 whitepegs = 0;
                 //clears the array that we are comparing to
@@ -440,6 +450,7 @@ public class Main extends Application {
     }
 
     /**
+     * Creates the content for player 1 which is static data and wont change.
      * @return root which is a pane that the content will be displayed on.
      */
     private Parent createp1Content() {
@@ -573,7 +584,7 @@ public class Main extends Application {
             pegGroup.getChildren().add(defaultPegs);
         }
 
-        //we have a seperate group for the keys because when we start a new game
+        //we have a separate group for the keys because when we start a new game
         //we just need to clear the pieceGroup and leave the keys alone.
         //this code adds all of the key pieces listed above to the keyGroup
         //which is indirectly added to the gameScreen.
@@ -589,7 +600,7 @@ public class Main extends Application {
 
     /**
      * @param primaryStage input for a stage which is the thing
-     *                     that will be displayed to the user.
+     * that will be displayed to the user.
      */
 
     public void start(final Stage primaryStage) {
@@ -941,7 +952,7 @@ public class Main extends Application {
      *
      * @return returns instance of Pegs which has the colors and location.
      */
-    public Pegs getPegColors() {
+    private Pegs getPegColors() {
 
         //System.out.println("blackPegs: " + blackpegs);
         //System.out.println("whitePegs: " + whitepegs);
@@ -1013,7 +1024,7 @@ public class Main extends Application {
      * @param y takes the y location of a piece.
      * @return returns a string based off of where the piece is located.
      */
-    private String keyLocation(int x, int y) {
+    private String keyLocation(final int x, final int y) {
 
         if (x == 6 && y == 6) {
             return "green";
@@ -1042,7 +1053,7 @@ public class Main extends Application {
      * @param y takes the y location of a piece.
      * @return returns true or false if string from keyLocation matches a color.
      */
-    private boolean keySpace(int x, int y) {
+    private boolean keySpace(final int x, final  int y) {
         String temp = keyLocation(x, y);
         boolean result;
         switch (temp) {
@@ -1175,7 +1186,7 @@ public class Main extends Application {
      *
      * @param args args.
      */
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
 
         launch(args);
     }

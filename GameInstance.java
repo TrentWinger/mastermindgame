@@ -95,7 +95,7 @@ public class GameInstance {
      * @param color3 third color passed.
      * @param color4 fourth color passed.
      */
-    public void setAnswer(String color1, String color2, String color3, String color4){
+    public void setAnswer(final String color1, final String color2, final String color3, final String color4){
         this.answer.orderArray[0] = color1;
         this.answer.orderArray[1] = color2;
         this.answer.orderArray[2] = color3;
@@ -139,7 +139,7 @@ public class GameInstance {
      * @param color3 third color guessed.
      * @param color4 fourth color guessed.
      */
-    public void guess(String color1, String color2, String color3, String color4) {
+    public void guess(final String color1, final String color2, final String color3, final String color4) {
         if (ongoing) {
 
 
