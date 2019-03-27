@@ -21,6 +21,8 @@ import javafx.stage.Stage;
 import javafx.scene.control.CheckBox;
 
 
+import java.util.HashMap;
+
 import static gameLogic.GameInstance.turnCount;
 import static gameLogic.GameInstance.blackpegs;
 import static gameLogic.GameInstance.whitepegs;
@@ -34,6 +36,11 @@ public class Main extends Application {
 
     //Creates constant for tile size, height and width
     //which are easily accessed throughout project
+
+    /**
+     * storing guess for AI.
+     */
+    HashMap<Integer, HashMap<String[], Integer[]>> map = new HashMap<>();
 
     /**
      * integer that holds the size of each tile.
@@ -380,6 +387,16 @@ public class Main extends Application {
                     turnCount = 14;
                 }
 
+                Integer[] pegsAI = new Integer[2];
+                pegsAI[0] = blackpegs;
+                pegsAI[1] = whitepegs;
+
+                HashMap<String[], Integer[]> turnAndPegs = new HashMap<>();
+                turnAndPegs.put(p2arr,pegsAI);
+
+                map.put(turnCount, turnAndPegs);
+                System.out.println(map);
+
                 turnCount--;
 
                 //if you run out of turns (lose), show the key
@@ -399,6 +416,7 @@ public class Main extends Application {
                 //clears the array that we are comparing to
                 for (int i = 0; i < p2arr.length; i++) {
                     p2arr[i] = null;
+
                 }
                 guessButton.setDisable(!player1Turn);
             } else {
@@ -491,7 +509,7 @@ public class Main extends Application {
         Image trashCan = new Image("File:images/Trash-Can.png");
         ImageView tc = new ImageView();
         tc.setImage(trashCan);
-        tc.setFitWidth(TILE_SIZE - 10);
+        tc.setFitWidth(TILE_SIZE);
         tc.setFitHeight(TILE_SIZE);
         tc.relocate(7 * TILE_SIZE, 9 * TILE_SIZE);
 
