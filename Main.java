@@ -756,12 +756,13 @@ public class Main extends Application {
      * @param color    passes the color of the piece
      * @param x        location at where the piece will be placed
      * @param y        location at where the piece will be placed
-     * @param moveable if its not moveable then you cannot move it
+     * @param moveable if its not moveable then you cannot move it.
+     * @param player1 Tells us if it is player 1's turn or player 2.
      * @return returns type Pieces (a new piece)
      */
-    private Pieces makePiece(Color color, int x, int y, boolean moveable, boolean player1) {
+    private Pieces makePiece(final Color color, final int x, final int y, final boolean moveable, final boolean player1) {
         //creates new piece from Pieces class
-        Pieces piece = new Pieces(color, x, y, moveable, player1);
+        Pieces piece = new Pieces(color, x, y, moveable);
 
 
         //when the mouse is released, the OldX, OldY, newX and newY are updated
