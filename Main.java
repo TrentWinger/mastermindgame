@@ -515,8 +515,8 @@ public class Main extends Application {
         Button newGame = new Button("New Game");
         newGame.relocate(6 * TILE_SIZE + (TILE_SIZE / 2), 0);
         newGame.setOnAction(e -> {
-             seconds = 0;
-             minutes = 0;
+            seconds = 0;
+            minutes = 0;
             pieceGroup.getChildren().clear();
             pegColors.getChildren().clear();
             for (int i = 0; i < arr.length; i++) {
@@ -600,7 +600,9 @@ public class Main extends Application {
                 System.out.println("Please Place All Pieces");
             }
 
-            player1Turn = false;
+            if (isTwoPlayer){
+                player1Turn = false;
+            }
 
         });
 

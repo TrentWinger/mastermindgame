@@ -36,6 +36,12 @@ public class GameInstance {
     public static int whitepegs = 0;
 
     /**
+     * Array for keeping track of turns
+     */
+
+    public Turn[] turns = new Turn[12];
+
+    /**
      * Array for picking a random color when enable duplicates is off.
      */
     private String[] colorz = new String[Main.diffColors];
@@ -118,6 +124,7 @@ public class GameInstance {
         s = colorz[random];
 
 
+
         if (!Main.duplicateColors) {
             colorz[random] = null;
 
@@ -141,7 +148,6 @@ public class GameInstance {
      */
     public void guess(final String color1, final String color2, final String color3, final String color4) {
         if (ongoing) {
-
 
             Move move = new Move(color1, color2, color3, color4);
 
@@ -208,6 +214,16 @@ public class GameInstance {
                 }
             }
 
+            for(int i=0; i < this.turns.length; i++){
+                if (turns[i] == null){
+                    turns[i] = new Turn(move, blackpegs, whitepegs);
+                    break;
+                }
+            }
+
+            System.out.println("TURN COUNT:"+turnCount);
+
+
 
         } else {
             System.out.print("The game has ended");
@@ -215,4 +231,93 @@ public class GameInstance {
         }
 
     }
+    public String[] guessAI(){
+        String[] guess = new String[4];
+
+        guess[0] = randomColor();
+        guess[1] = randomColor();
+        guess[2] = randomColor();
+        guess[3] = randomColor();
+
+            if(!(turnCount == 12) && turns[12-turnCount-1] != null && turns[12-turnCount-1].getWhitepegs() >0){
+                for(int j = turns[12-turnCount-1].getWhitepegs()-1; j>=0;j++){
+                    if(j==4){
+                        guess[0] = turns[12-turnCount-1].getMove().orderArray[4];
+                    }
+                    else{
+                        guess[j+1] = turns[12-turnCount-1].getMove().orderArray[j];
+                    }
+                }
+            }
+
+            if(!(turnCount == 12) && turns[12-turnCount-1] != null && turns[12-turnCount-1].getBlackpegs() >0){
+                for(int j = turns[12-turnCount-1].getBlackpegs()-1; j>=0;j++){
+                    guess[j] = turns[12-turnCount-1].getMove().orderArray[j];
+                }
+            }
+
+        for(int i=0;i<=12;i++){
+            if(!(turnCount == 12) && turns[i].getBlackpegs() > 0){
+                for(int j = 0; j <= 12; j++){
+                    if(turns[j].getBlackpegs()>0){
+                        if(i!=j){
+                            if(turns[i].getMove().orderArray[0].equals(turns[j].getMove().orderArray[0])){
+                                guess[0]=turns[i].getMove().orderArray[0];
+                            }
+
+                        }
+                    }
+                }
+
+            }
+            if(!(turnCount == 12) && turns[i].getBlackpegs() > 0){
+                for(int j = 0; j <= 12; j++){
+                    if(turns[j].getBlackpegs()>0){
+                        if(i!=j){
+                            if(turns[i].getMove().orderArray[1].equals(turns[j].getMove().orderArray[1])){
+                                guess[1]=turns[i].getMove().orderArray[1];
+                            }
+
+                        }
+                    }
+                }
+
+            }
+            if(!(turnCount == 12) && turns[i].getBlackpegs() > 0){
+                for(int j = 0; j <= 12; j++){
+                    if(turns[j].getBlackpegs()>0){
+                        if(i!=j){
+                            if(turns[i].getMove().orderArray[2].equals(turns[j].getMove().orderArray[2])){
+                                guess[2]=turns[i].getMove().orderArray[2];
+                            }
+
+                        }
+                    }
+                }
+
+            }
+            if(!(turnCount == 12) && turns[i].getBlackpegs() > 0){
+                for(int j = 0; j <= 12; j++){
+                    if(turns[j].getBlackpegs()>0){
+                        if(i!=j){
+                            if(turns[i].getMove().orderArray[3].equals(turns[j].getMove().orderArray[3])){
+                                guess[3]=turns[i].getMove().orderArray[3];
+                            }
+
+                        }
+                    }
+                }
+            }
+
+        }
+        System.out.println("GUESS: "+guess[0]+" "+guess[1]+""+guess[2]+""+guess[3]);
+        return guess;
+
+
+
+    }
+
 }
+//The following code adds the current guess, and respective peg counts to the turns array.
+
+
