@@ -337,8 +337,6 @@ public class Main extends Application {
     private Parent createp2Content() {
         Pane root = new Pane();
 
-
-
         //sets background as the image in that path
         Image background = new Image("File:images/Light-Wood-Background.jpg");
         ImageView iv = new ImageView();
@@ -364,7 +362,6 @@ public class Main extends Application {
             }
             p2game = new GameInstance();
 
-
         });
 
         Button menu = new Button("Menu");
@@ -379,18 +376,14 @@ public class Main extends Application {
         Image trashCan = new Image("File:images/Trash-Can.png");
         ImageView tc = new ImageView();
         tc.setImage(trashCan);
-        tc.setFitWidth(TILE_SIZE);
-        tc.setFitHeight(TILE_SIZE);
+        tc.setFitWidth(TILE_SIZE + 10);
+        tc.setFitHeight(TILE_SIZE + 10);
         tc.relocate(7 * TILE_SIZE, 9 * TILE_SIZE);
-
-
-
 
         //Guess button, setOnMouseClicked is making a guess
         Button guessButton = new Button("Guess");
         guessButton.relocate(7 * TILE_SIZE, 12 * TILE_SIZE);
         guessButton.setOnMouseClicked(e -> {
-            //for testing purposes
             //System.out.println(" " + arr[0] + arr[1] + arr[2] + arr[3]);
 
             //check if all of the tiles in the row have a piece on them
@@ -423,7 +416,6 @@ public class Main extends Application {
 
                 map.put(turnCount, turnAndPegs);
 
-
                 turnCount--;
 
                 //if you run out of turns (lose), show the key
@@ -436,7 +428,6 @@ public class Main extends Application {
                     p2pieceGroup.getChildren().addAll(answer1, answer2, answer3, answer4);
                 }
                 //System.out.println("turns left: " + turnCount);
-
 
                 blackpegs = 0;
                 whitepegs = 0;
@@ -517,7 +508,7 @@ public class Main extends Application {
 
         timerText = new Text("00:00:00");
         timerText.setFill(Color.BLACK);
-        timerText.setFont(Font.font("Verdana", FontWeight.BOLD, 13));
+        timerText.setFont(Font.font("Verdana", FontWeight.BOLD, 15));
         timerText.relocate(5 * TILE_SIZE,  0);
 
         //new game button
@@ -548,8 +539,8 @@ public class Main extends Application {
         Image trashCan = new Image("File:images/Trash-Can.png");
         ImageView tc = new ImageView();
         tc.setImage(trashCan);
-        tc.setFitWidth(TILE_SIZE);
-        tc.setFitHeight(TILE_SIZE);
+        tc.setFitWidth(TILE_SIZE + 10);
+        tc.setFitHeight(TILE_SIZE + 10);
         tc.relocate(7 * TILE_SIZE, 9 * TILE_SIZE);
 
 
