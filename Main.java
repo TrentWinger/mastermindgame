@@ -3,12 +3,11 @@ package gamePackage;
 import gameLogic.GameInstance;
 
 import javafx.application.Application;
+import javafx.collections.FXCollections;
 import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -18,10 +17,9 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
-import javafx.scene.control.CheckBox;
 
 
-import javax.swing.*;
+import javax.swing.Timer;
 import java.util.HashMap;
 
 
@@ -172,7 +170,7 @@ public class Main extends Application {
     /**
      * All of the scenes which are placed into the window.
      */
-    private Scene titleScreen, gameScreen, diffScreen, instructScreen, gameModeScreen, player2screen;
+    private Scene titleScreen, gameScreen, diffScreen, instructScreen, gameModeScreen, player2screen, optionsScreen;
 
 
     /**
@@ -194,6 +192,17 @@ public class Main extends Application {
      * Keeps track of the amount of minutes it took to play a game.
      */
     private int minutes = 0;
+
+    /**
+     * Integer value which tells the game which theme is selected.
+     */
+    public static int theme = 0;
+
+    /**
+     * tells us if it is an AI game
+     */
+    private boolean isAiGame = false;
+
 
 
     /**
@@ -327,6 +336,7 @@ public class Main extends Application {
 
         gameScreen = new Scene((createp1Content()));
 
+
         window.setScene(gameScreen);
     }
 
@@ -338,7 +348,17 @@ public class Main extends Application {
         Pane root = new Pane();
 
         //sets background as the image in that path
-        Image background = new Image("File:images/Light-Wood-Background.jpg");
+        Image background;
+        if (theme == 1) {
+            background = new Image("File:images/Cyber/Background_Cyber.png");
+
+        } else if (theme == 2) {
+            background = new Image("File:images/Cookie/Cookie_Background.png");
+
+        } else {
+            background = new Image("File:images/Default/Light-Wood-Background.jpg");
+        }
+
         ImageView iv = new ImageView();
         iv.setImage(background);
         iv.setFitHeight(HEIGHT * TILE_SIZE + TILE_SIZE);
@@ -373,7 +393,7 @@ public class Main extends Application {
         });
 
         //image for the trash can below the colors
-        Image trashCan = new Image("File:images/Trash-Can.png");
+        Image trashCan = new Image("File:images/Default/Trash-Can.png");
         ImageView tc = new ImageView();
         tc.setImage(trashCan);
         tc.setFitWidth(TILE_SIZE + 10);
@@ -383,7 +403,11 @@ public class Main extends Application {
         //Guess button, setOnMouseClicked is making a guess
         Button guessButton = new Button("Guess");
         guessButton.relocate(7 * TILE_SIZE, 12 * TILE_SIZE);
+        if (isAiGame) {
+            guessButton.setDisable(true);
+        }
         guessButton.setOnMouseClicked(e -> {
+
             //System.out.println(" " + arr[0] + arr[1] + arr[2] + arr[3]);
 
             //check if all of the tiles in the row have a piece on them
@@ -494,7 +518,16 @@ public class Main extends Application {
 
 
         //sets background as the image in that path
-        Image background = new Image("File:images/Light-Wood-Background.jpg");
+        Image background;
+        if (theme == 1) {
+            background = new Image("File:images/Cyber/Background_Cyber.png");
+
+        } else if (theme == 2) {
+            background = new Image("File:images/Cookie/Cookie_Background.png");
+
+        } else {
+            background = new Image("File:images/Default/Light-Wood-Background.jpg");
+        }
         ImageView iv = new ImageView();
         iv.setImage(background);
         iv.setFitHeight(HEIGHT * TILE_SIZE + TILE_SIZE);
@@ -515,8 +548,8 @@ public class Main extends Application {
         Button newGame = new Button("New Game");
         newGame.relocate(6 * TILE_SIZE + (TILE_SIZE / 2), 0);
         newGame.setOnAction(e -> {
-            seconds = 0;
-            minutes = 0;
+             seconds = 0;
+             minutes = 0;
             pieceGroup.getChildren().clear();
             pegColors.getChildren().clear();
             for (int i = 0; i < arr.length; i++) {
@@ -536,7 +569,7 @@ public class Main extends Application {
         });
 
         //image for the trash can below the colors
-        Image trashCan = new Image("File:images/Trash-Can.png");
+        Image trashCan = new Image("File:images/Default/Trash-Can.png");
         ImageView tc = new ImageView();
         tc.setImage(trashCan);
         tc.setFitWidth(TILE_SIZE + 10);
@@ -572,6 +605,30 @@ public class Main extends Application {
                     turnCount = 14;
                 }
 
+                if (isAiGame) {
+                    String[] aiGuess;
+                    aiGuess = p2game.guessAI();
+                    p2game.guess(aiGuess[0], aiGuess[1], aiGuess[2], aiGuess[3]);
+
+
+                    Pieces aiPiece1 = makePiece(stringToColor(aiGuess[0]), 0, turnCount, false, false);
+                    Pieces aiPiece2 = makePiece(stringToColor(aiGuess[1]), 1, turnCount, false, false);
+                    Pieces aiPiece3 = makePiece(stringToColor(aiGuess[2]), 2, turnCount, false, false);
+                    Pieces aiPiece4 = makePiece(stringToColor(aiGuess[3]), 3, turnCount, false, false);
+
+                    Pegs aiPegs = getPegColors();
+
+                    //adds the peg color array to the pegColors group
+
+                    p2pegColors.getChildren().addAll(aiPegs);
+
+                    p2pieceGroup.getChildren().addAll(aiPiece1, aiPiece2, aiPiece3, aiPiece4);
+                    for (int i = 0; i < aiGuess.length; i++) {
+                        aiGuess[i] = null;
+                    }
+
+                }
+
                 if (!isTwoPlayer) {
                     turnCount--;
                 }
@@ -592,6 +649,9 @@ public class Main extends Application {
                 for (int i = 0; i < arr.length; i++) {
                     arr[i] = null;
                 }
+
+
+
                 if (isTwoPlayer) {
                     guessButton.setDisable(player1Turn);
                 }
@@ -600,7 +660,9 @@ public class Main extends Application {
                 System.out.println("Please Place All Pieces");
             }
 
-            if (isTwoPlayer){
+
+
+            if (isTwoPlayer) {
                 player1Turn = false;
             }
 
@@ -608,7 +670,7 @@ public class Main extends Application {
 
 
         Button flip = new Button("flip");
-        if (isTwoPlayer) {
+        if (isTwoPlayer || isAiGame) {
             flip.relocate(6 * TILE_SIZE, 12 * TILE_SIZE);
             flip.setOnMouseClicked(e -> {
                 window.setScene(player2screen);
@@ -717,10 +779,15 @@ public class Main extends Application {
         Button go = new Button("Go");
         go.setOnAction(e -> {
 
-            if (gm != 0) {
+            if (gm == 1) {
                 createp2game();
                 isTwoPlayer = true;
             }
+            if (gm == 2) {
+                createp2game();
+                isAiGame = true;
+            }
+
 
             createGame();
 
@@ -780,7 +847,7 @@ public class Main extends Application {
         gameTitle.relocate(75, 50);
 
         //makes the background the image in the specified path
-        Image background = new Image("File:images/Wood-Background.jpg");
+        Image background = new Image("File:images/Default/Wood-Background.jpg");
         ImageView iv = new ImageView();
         iv.setImage(background);
         iv.setFitHeight(HEIGHT * TILE_SIZE);
@@ -795,6 +862,7 @@ public class Main extends Application {
         Button options = new Button("Options");
         options.relocate(200, 400);
         options.setPrefSize(100, 50);
+        options.setOnAction(e -> window.setScene(optionsScreen));
 
         Button htp = new Button("How To Play");
         htp.relocate(200, 500);
@@ -818,6 +886,7 @@ public class Main extends Application {
         titleScreen = new Scene(menu, TILE_SIZE * WIDTH * 2, TILE_SIZE * HEIGHT);
         diffScreen = new Scene(difficulty, TILE_SIZE * WIDTH * 2, TILE_SIZE * HEIGHT);
         instructScreen = new Scene(createInstructions());
+        optionsScreen = new Scene(createOptions());
 
         //menu is the main menu panel,
         //we add all the buttons and background to the panel
@@ -871,6 +940,7 @@ public class Main extends Application {
             //this is for testing purposes
             System.out.println("Old X : " + x0 + " Old Y : " + y0);
             System.out.println("New X : " + newX + " New Y : " + newY);
+
 
 
             if (player1) {
@@ -1170,6 +1240,58 @@ public class Main extends Application {
     }
 
     /**
+     * Creates the scene which is used for navigating the options menu.
+     * @return returns a pane which is displayed on the window
+     */
+    private Parent createOptions() {
+        Pane root = new Pane();
+
+        root.setPrefSize((WIDTH * TILE_SIZE) * 2, (HEIGHT * TILE_SIZE) + TILE_SIZE);
+
+        Text title = new Text("Options");
+        title.setFill(Color.WHITE);
+        title.setFont(Font.font("Verdana", FontWeight.BOLD, 50));
+        title.relocate(50, 50);
+
+
+        Image background = new Image("File:images/Default/Wood-Background.jpg");
+        ImageView iv = new ImageView();
+        iv.setImage(background);
+        iv.setFitHeight((HEIGHT * TILE_SIZE) + TILE_SIZE);
+        iv.setFitWidth(WIDTH * TILE_SIZE * 2);
+
+        Text themeLbl = new Text("Select Theme");
+        themeLbl.setFont(Font.font("Verdana", 20));
+        themeLbl.setFill(Color.WHITE);
+        themeLbl.relocate(50,150);
+
+
+
+        Button menu = new Button("Menu");
+        menu.relocate(7 * TILE_SIZE, TILE_SIZE);
+        menu.setOnAction(e -> window.setScene(titleScreen));
+
+        String[] themes = {"Default", "Cyber", "Cookie"};
+
+        ComboBox list = new ComboBox(FXCollections.observableArrayList(themes));
+        list.relocate(50, 175);
+        list.setPromptText("Default");
+        list.setOnAction(e -> {
+            if (list.getValue() == "Default") {
+                theme = 0;
+            } else if (list.getValue() == "Cyber") {
+                theme = 1;
+            } else if(list.getValue() == "Cookie") {
+                theme = 2;
+            }
+        });
+
+
+        root.getChildren().addAll(iv, title, menu, themeLbl, list);
+        return root;
+    }
+
+    /**
      * Create the contents of the scene for the how to play category.
      *
      * @return returns root which is a pane used by the window.
@@ -1186,7 +1308,7 @@ public class Main extends Application {
         title.relocate(75, 50);
 
 
-        Image background = new Image("File:images/Wood-Background.jpg");
+        Image background = new Image("File:images/Default/Wood-Background.jpg");
         ImageView iv = new ImageView();
         iv.setImage(background);
         iv.setFitHeight((HEIGHT * TILE_SIZE) + TILE_SIZE);
@@ -1216,7 +1338,7 @@ public class Main extends Application {
         Pane root = new Pane();
         root.setPrefSize((WIDTH * TILE_SIZE) * 2, (HEIGHT * TILE_SIZE) + TILE_SIZE);
 
-        Image background = new Image("File:images/Wood-Background.jpg");
+        Image background = new Image("File:images/Default/Wood-Background.jpg");
         ImageView iv = new ImageView();
         iv.setImage(background);
         iv.setFitHeight((HEIGHT * TILE_SIZE) + TILE_SIZE);
