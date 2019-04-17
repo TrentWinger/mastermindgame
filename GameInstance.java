@@ -1,7 +1,7 @@
-package modelpackage;
+package gameLogic;
 
 
-import viewpackage.Main;
+import gamePackage.Main;
 
 import java.util.Random;
 
@@ -249,11 +249,14 @@ public class GameInstance {
         System.out.println("White: " + whitepegs);
         System.out.println("Black: " + blackpegs);
 
+        System.out.println("PRE GUESS:"+guess[0]+guess[1]+guess[2]+guess[3]);
+
 
 
 
         if (!(turnCount == 12) && turns[12 - turnCount - 1] != null && turns[12 - turnCount - 1].getWhitepegs() > 0) {
-            for (int j = turns[12 - turnCount - 1].getWhitepegs() - 1; j <= 3; j++) {
+            for (int j = turns[12 - turnCount - 1].getWhitepegs() - 1; j >= 0; j--) {
+                System.out.println("THIS IS HOW MANY LOOPS: "+j);
                 if (j == 3) {
                     System.out.println("J Loop 0: " + j);
 
@@ -265,9 +268,10 @@ public class GameInstance {
                 }
             }
         }
+        System.out.println("White Peg Guess"+guess[0]+guess[1]+guess[2]+guess[3]);
 
         if (!(turnCount == 12) && turns[12 - turnCount - 1] != null && turns[12 - turnCount - 1].getBlackpegs() > 0) {
-            for (int j = turns[12 - turnCount - 1].getBlackpegs() - 1; j <= 3; j++) {
+            for (int j = turns[12 - turnCount - 1].getBlackpegs() - 1; j >= 0; j--) {
                 System.out.println("J Loop 2: " + j);
                 guess[j] = turns[12 - turnCount - 1].getMove().orderArray[j];
             }
@@ -275,6 +279,7 @@ public class GameInstance {
 
         for (int i = 0; i < 12; i++) {
             if (!(turnCount == 12) && turns[12 - turnCount - 1] != null && turns[i] != null && turns[i].getBlackpegs() > 0) {
+                System.out.println(turns[i].getBlackpegs());
                 for (int j = 0; j < 12; j++) {
                     if (turns[j] != null && turns[j].getBlackpegs() > 0) {
                         if (i != j) {
@@ -287,11 +292,12 @@ public class GameInstance {
                 }
 
             }
-            if (!(turnCount == 12) && turns[12 - turnCount - 1] != null && turns[i] != null && turns[i].getBlackpegs() > 0) {
+            if (!(turnCount == 12) && turns[12 - turnCount - 1] != null && turns[i] != null && turns[i].getBlackpegs() > 1) {
                 for (int j = 0; j < 12; j++) {
                     if (turns[j] != null && turns[j].getBlackpegs() > 0) {
                         if (i != j) {
                             if (turns[i].getMove().orderArray[1].equals(turns[j].getMove().orderArray[1])) {
+                                guess[0] = turns[i].getMove().orderArray[0];
                                 guess[1] = turns[i].getMove().orderArray[1];
                             }
 
@@ -300,11 +306,13 @@ public class GameInstance {
                 }
 
             }
-            if (!(turnCount == 12) && turns[12 - turnCount - 1] != null && turns[i] != null && turns[i].getBlackpegs() > 0) {
+            if (!(turnCount == 12) && turns[12 - turnCount - 1] != null && turns[i] != null && turns[i].getBlackpegs() > 2) {
                 for (int j = 0; j < 12; j++) {
                     if (turns[j] != null && turns[j].getBlackpegs() > 0) {
                         if (i != j) {
                             if (turns[i].getMove().orderArray[2].equals(turns[j].getMove().orderArray[2])) {
+                                guess[0] = turns[i].getMove().orderArray[0];
+                                guess[1] = turns[i].getMove().orderArray[1];
                                 guess[2] = turns[i].getMove().orderArray[2];
                             }
 
@@ -312,18 +320,6 @@ public class GameInstance {
                     }
                 }
 
-            }
-            if (!(turnCount == 12) && turns[12 - turnCount - 1] != null && turns[i] != null && turns[i].getBlackpegs() > 0) {
-                for (int j = 0; j < 12; j++) {
-                    if (turns[j] != null && turns[j].getBlackpegs() > 0) {
-                        if (i != j) {
-                            if (turns[i].getMove().orderArray[3].equals(turns[j].getMove().orderArray[3])) {
-                                guess[3] = turns[i].getMove().orderArray[3];
-                            }
-
-                        }
-                    }
-                }
             }
 
         }
