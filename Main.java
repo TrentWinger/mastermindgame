@@ -1,13 +1,17 @@
-package gamePackage;
+package viewpackage;
 
-import gameLogic.GameInstance;
+import modelpackage.GameInstance;
 
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.ToggleGroup;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -23,9 +27,9 @@ import javax.swing.Timer;
 import java.util.HashMap;
 
 
-import static gameLogic.GameInstance.turnCount;
-import static gameLogic.GameInstance.blackpegs;
-import static gameLogic.GameInstance.whitepegs;
+import static modelpackage.GameInstance.turnCount;
+import static modelpackage.GameInstance.blackpegs;
+import static modelpackage.GameInstance.whitepegs;
 
 
 /**
@@ -37,6 +41,9 @@ public class Main extends Application {
     //Creates constant for tile size, height and width
     //which are easily accessed throughout project
 
+    /**
+     * Displays the timer in the upper right hand corner.
+     */
     private Text timerText;
 
     /**
@@ -111,6 +118,11 @@ public class Main extends Application {
     private Color[] pegArr = new Color[4];
 
     //player 2 stuff here
+
+    /**
+     * Array that holds the colors for the pegs.
+     */
+    private Color[] p2pegArr = new Color[4];
 
     /**
      * Array that is compared to with the answer every turn.
@@ -199,7 +211,7 @@ public class Main extends Application {
     public static int theme = 0;
 
     /**
-     * tells us if it is an AI game
+     * tells us if it is an AI game.
      */
     private boolean isAiGame = false;
 
@@ -414,7 +426,7 @@ public class Main extends Application {
             if (!(p2arr[0] == null || p2arr[1] == null || p2arr[2] == null || p2arr[3] == null)) {
                 //calls guess, creates pegs, gets peg colors.
                 p2game.guess(p2arr[0], p2arr[1], p2arr[2], p2arr[3]);
-                Pegs peg = getPegColors();
+                Pegs peg = p2getPegColors();
 
                 //adds the peg color array to the pegColors group
                 p2pegColors.getChildren().addAll(peg);
@@ -605,10 +617,15 @@ public class Main extends Application {
                     turnCount = 14;
                 }
 
+                blackpegs = 0;
+                whitepegs = 0;
+
+
                 if (isAiGame) {
                     String[] aiGuess;
                     aiGuess = p2game.guessAI();
-                    p2game.guess(aiGuess[0], aiGuess[1], aiGuess[2], aiGuess[3]);
+                    //System.out.println(aiGuess[0] + aiGuess[1] + aiGuess[2] + aiGuess[3]);
+                    //p2game.guess(aiGuess[0], aiGuess[1], aiGuess[2], aiGuess[3]);
 
 
                     Pieces aiPiece1 = makePiece(stringToColor(aiGuess[0]), 0, turnCount, false, false);
@@ -616,16 +633,20 @@ public class Main extends Application {
                     Pieces aiPiece3 = makePiece(stringToColor(aiGuess[2]), 2, turnCount, false, false);
                     Pieces aiPiece4 = makePiece(stringToColor(aiGuess[3]), 3, turnCount, false, false);
 
-                    Pegs aiPegs = getPegColors();
+                    Pegs aiPegs = p2getPegColors();
 
                     //adds the peg color array to the pegColors group
 
                     p2pegColors.getChildren().addAll(aiPegs);
 
                     p2pieceGroup.getChildren().addAll(aiPiece1, aiPiece2, aiPiece3, aiPiece4);
+
                     for (int i = 0; i < aiGuess.length; i++) {
                         aiGuess[i] = null;
                     }
+
+                    blackpegs = 0;
+                    whitepegs = 0;
 
                 }
 
@@ -643,8 +664,7 @@ public class Main extends Application {
                     pieceGroup.getChildren().addAll(answer1, answer2, answer3, answer4);
                 }
                 //System.out.println("turns left: " + turnCount);
-                blackpegs = 0;
-                whitepegs = 0;
+
                 //clears the array that we are comparing to
                 for (int i = 0; i < arr.length; i++) {
                     arr[i] = null;
@@ -746,6 +766,7 @@ public class Main extends Application {
 
         CheckBox dup = new CheckBox("Enable Duplicates");
         dup.setTextFill(Color.WHITE);
+        dup.setSelected(true);
 
 
         //relocates the buttons to where they are
@@ -836,7 +857,7 @@ public class Main extends Application {
         //Start button code, setOnAction contains code for
         //when the button is pressed
         Button start = new Button("Start");
-        start.setOnAction(e -> window.setScene(diffScreen));
+        start.setOnAction(e -> window.setScene(gameModeScreen));
         start.relocate(200, 300);
         start.setPrefSize(100, 50);
 
@@ -869,10 +890,10 @@ public class Main extends Application {
         htp.setPrefSize(100, 50);
         htp.setOnAction(e -> window.setScene(instructScreen));
 
-        Button gameMode = new Button("Game Mode");
-        gameMode.relocate(200, 600);
-        gameMode.setPrefSize(100, 50);
-        gameMode.setOnAction(e -> window.setScene(gameModeScreen));
+//        Button gameMode = new Button("Game Mode");
+//        gameMode.relocate(200, 600);
+//        gameMode.setPrefSize(100, 50);
+//        gameMode.setOnAction(e -> window.setScene(gameModeScreen));
 
         //this is if we just want some regular
         //background color instead of an image
@@ -890,7 +911,7 @@ public class Main extends Application {
 
         //menu is the main menu panel,
         //we add all the buttons and background to the panel
-        menu.getChildren().addAll(diffBg, start, gameTitle, options, htp, gameMode);
+        menu.getChildren().addAll(diffBg, start, gameTitle, options, htp);
         difficulty.getChildren().addAll(iv, go, easy, medium, hard, dup);
 
         //makes the window not able to be resized, sets default scene
@@ -1122,6 +1143,34 @@ public class Main extends Application {
         }
 
         return new Pegs(pegArr[0], pegArr[1], pegArr[2], pegArr[3], WIDTH, turnCount);
+
+    }
+
+    /**
+     * this function looks at the GameInstance class and
+     * sees how many whitepegs there are and black pegs there are.
+     * same as getPegColors but for player 2
+     * @return returns instance of Pegs which has the colors and location.
+     */
+    private Pegs p2getPegColors() {
+
+        System.out.println("blackPegs: " + blackpegs);
+        System.out.println("whitePegs: " + whitepegs);
+
+        //checks if you have any black pegs, if so update pegArr to black
+        for (int i = 0; i < blackpegs; i++) {
+            p2pegArr[i] = Color.BLACK;
+        }
+        //checks if you have white pegs, if so update the pegArr to White
+        for (int i = blackpegs; i < whitepegs + blackpegs; i++) {
+            p2pegArr[i] = Color.WHITE;
+        }
+        //if no white pegs or black pegs, make the color transparent (default)
+        for (int i = blackpegs + whitepegs; i < pegArr.length; i++) {
+            p2pegArr[i] = Color.TRANSPARENT;
+        }
+
+        return new Pegs(p2pegArr[0], p2pegArr[1], p2pegArr[2], p2pegArr[3], WIDTH, turnCount);
 
     }
 
