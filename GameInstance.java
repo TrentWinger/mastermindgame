@@ -1,7 +1,6 @@
-package gameLogic;
+package modelpackage;
 
-
-import gamePackage.Main;
+import viewpackage.Main;
 
 import java.util.Random;
 
@@ -345,4 +344,3 @@ public class GameInstance {
     }
 
 }
-

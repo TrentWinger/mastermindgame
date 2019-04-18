@@ -224,6 +224,7 @@ public class Main extends Application {
         p2pieceGroup.getChildren().clear();
         p2keyGroup.getChildren().clear();
         p2guessGroup.getChildren().clear();
+        p2pegColors.getChildren().clear();
 
         if (diffColors >= 4) {
             Pieces redPiece = makePiece(Color.RED, 6, 5, true, false);
@@ -294,6 +295,7 @@ public class Main extends Application {
         pieceGroup.getChildren().clear();
         keyGroup.getChildren().clear();
         guessGroup.getChildren().clear();
+        pegColors.getChildren().clear();
 
 
         if (diffColors >= 4) {
@@ -440,7 +442,6 @@ public class Main extends Application {
                     Pieces answer3 = makePiece(stringToColor(p2game.getAnswer()[2]), 2, 0, false, false);
                     Pieces answer4 = makePiece(stringToColor(p2game.getAnswer()[3]), 3, 0, false, false);
                     p2pieceGroup.getChildren().addAll(answer1, answer2, answer3, answer4);
-                    turnCount = 14;
                 }
 
                 Integer[] pegsAI = new Integer[2];
@@ -614,7 +615,6 @@ public class Main extends Application {
                     Pieces answer3 = makePiece(stringToColor(game.getAnswer()[2]), 2, 0, false, true);
                     Pieces answer4 = makePiece(stringToColor(game.getAnswer()[3]), 3, 0, false, true);
                     pieceGroup.getChildren().addAll(answer1, answer2, answer3, answer4);
-                    turnCount = 14;
                 }
 
                 blackpegs = 0;
@@ -635,7 +635,25 @@ public class Main extends Application {
 
                     Pegs aiPegs = p2getPegColors();
 
+
+                    if (blackpegs == 4) {
+                        //System.out.println("You win");
+                        Pieces answer1 = makePiece(stringToColor(p2game.getAnswer()[0]), 0, 0, false, false);
+                        Pieces answer2 = makePiece(stringToColor(p2game.getAnswer()[1]), 1, 0, false, false);
+                        Pieces answer3 = makePiece(stringToColor(p2game.getAnswer()[2]), 2, 0, false, false);
+                        Pieces answer4 = makePiece(stringToColor(p2game.getAnswer()[3]), 3, 0, false, false);
+                        p2pieceGroup.getChildren().addAll(answer1, answer2, answer3, answer4);
+                    }
                     //adds the peg color array to the pegColors group
+
+                    if (turnCount == 1) {
+                        //System.out.println("you lose");
+                        Pieces answer1 = makePiece(stringToColor(p2game.getAnswer()[0]), 0, 0, false, false);
+                        Pieces answer2 = makePiece(stringToColor(p2game.getAnswer()[1]), 1, 0, false, false);
+                        Pieces answer3 = makePiece(stringToColor(p2game.getAnswer()[2]), 2, 0, false, false);
+                        Pieces answer4 = makePiece(stringToColor(p2game.getAnswer()[3]), 3, 0, false, false);
+                        p2pieceGroup.getChildren().addAll(answer1, answer2, answer3, answer4);
+                    }
 
                     p2pegColors.getChildren().addAll(aiPegs);
 
@@ -803,10 +821,14 @@ public class Main extends Application {
             if (gm == 1) {
                 createp2game();
                 isTwoPlayer = true;
+            } else {
+                isTwoPlayer = false;
             }
             if (gm == 2) {
                 createp2game();
                 isAiGame = true;
+            } else {
+                isAiGame = false;
             }
 
 

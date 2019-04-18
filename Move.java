@@ -1,4 +1,4 @@
-package gameLogic;
+package modelpackage;
 
 /**
  * class for getting the move that is guessed or the answer.

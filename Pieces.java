@@ -1,10 +1,9 @@
-package gamePackage;
+package viewpackage;
 
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
-import javafx.scene.shape.Circle;
 
 import javafx.scene.paint.Color;
 
@@ -159,6 +158,12 @@ class Pieces extends StackPane {
         return img;
     }
 
+    /**
+     * function that takes a color in and outputs the file path for the image
+     * of the matching color for this theme.
+     * @param pieceColor Color of the piece that is being used
+     * @return returns a file path for an image
+     */
     private String colorToCookie(final Color pieceColor) {
         String img;
         String temp = pieceColor.toString();
@@ -198,6 +203,12 @@ class Pieces extends StackPane {
         return img;
     }
 
+    /**
+     * function that takes a color in and outputs the file path for the image
+     * of the matching color for this theme.
+     * @param pieceColor Color of the piece that is being used
+     * @return returns a file path for an image
+     */
     private String colorToCyber(final Color pieceColor) {
 
         String img;
