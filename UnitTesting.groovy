@@ -107,6 +107,38 @@ class UnitTesting {
         Assert.assertTrue(game.whitepegs == 0 && game.blackpegs == 1);
     }
 
+    @Test
+    public void testTurns1(){
+        GameInstance game = new GameInstance();
+        game.setAnswer("red", "yellow", "green", "blue");
+        game.guess("red", "orange", "orange", "orange");
+        Turn turn = game.turns[0];
+        Assert.assertTrue(turn.getMove().orderArray[0].equals("red"));
+    }
+    @Test
+    public void testTurns2() {
+        GameInstance game = new GameInstance();
+        game.setAnswer("red", "yellow", "green", "blue");
+        game.guess("red", "orange", "orange", "orange");
+        Turn turn = game.turns[0];
+        Assert.assertTrue(turn.getMove().orderArray[3].equals("orange"));
+    }
+    @Test
+    public void testTurns3(){
+        GameInstance game = new GameInstance();
+        game.setAnswer("red", "yellow", "green", "blue");
+        game.guess("red", "orange", "orange", "orange");
+        Turn turn = game.turns[0];
+        Assert.assertTrue(turn.getBlackpegs() == 1);
+    }
 
-
+    @Test
+    public void testTurns4(){
+        GameInstance game = new GameInstance();
+        game.setAnswer("red", "yellow", "green", "blue");
+        game.guess("red", "orange", "orange", "orange");
+        game.guess("purple","pink","blue","pink");
+        Turn turn = game.turns[1];
+        Assert.assertTrue(turn.getMove().orderArray[3].equals("pink"));
+    }
 }
